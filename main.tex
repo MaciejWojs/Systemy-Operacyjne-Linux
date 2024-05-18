@@ -3,17 +3,48 @@
 \usepackage{hyperref}
 \usepackage[polish]{babel}
 \usepackage{polski}
+\usepackage{array}
 \usepackage{biblatex}
 \addbibresource{bibliography.bib}
 
 \title{\textbf{Akademia Nauk Stosowanych w Nowym Sączu\\Wydział Nauk Inżynieryjnych\newline \newline Systemy operacyjne – projekt\\studia stacjonarne\\semestr letni 2023/2024}}
-% \subtitlepunct{aaaa}
-% \subtitle{aaa}
-\author{Imie nazwisko}
-\date{\today}
+% \author{Imie nazwisko}
+\date{}
 
 \begin{document}
 \maketitle
+
+\textbf{Temat projektu:}
+\begin{enumerate}
+    \item Zaprojektować infrastrukturę informatyczną na potrzeby „wybranej firmy”. Realizacja
+    serwerowa w oparciu o system operacyjny Linux, np.: Fedora Server 39, stacje klienckie
+    np. Linux MINT.
+    \item Wdrożyć niezbędne usługi wynikające z założeń takie jak: SSH, DHCP, DNS, HTTP/S,
+    motor bazodanowy (MySql)+PHP+phpMyAdmin, CMS WordPress, RAID, SAMBA,
+    SQUID, Postfix(SMTP) + Dovecot(POP/IMAP), oraz wybraną usługę. Wdrożyć
+    automatyzację przy użyciu skryptu np. Bash, oraz usługi cron. 
+    \item Cele projektu zweryfikować z założeniami zapisanymi w dokumencie „Szczegółowy
+    zarys projektu”. 
+\end{enumerate}
+
+% Increase row height by 50%
+\renewcommand{\arraystretch}{1.25}
+
+% Increase column spacing
+\setlength{\tabcolsep}{12pt}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{cccccc}
+    Imie i nazwisko: &&&& Data oddania: \\
+    Maciej Wójs &&&& \today \\
+    Nr grupy: &&&& Ocena: \\
+    L3 & \empty \\
+    \end{tabular}
+    % \caption{Sample Table}
+    % \label{tab:sample_table}
+\end{table}
+
 \newpage
 \tableofcontents
 \newpage
