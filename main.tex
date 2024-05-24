@@ -7,6 +7,12 @@
 \usepackage{biblatex}
 \addbibresource{bibliography.bib}
 
+\newcommand*{\fg}[3][!htb]{
+      \begin{figure*}[#1]
+      \includegraphics[#2]{#3}
+      \end{figure*}
+}
+
 \title{\textbf{Akademia Nauk Stosowanych w Nowym Sączu\\Wydział Nauk Inżynieryjnych\newline \newline Systemy operacyjne – projekt\\studia stacjonarne\\semestr letni 2023/2024}}
 % \author{Imie nazwisko}
 \date{}
@@ -29,7 +35,6 @@
 
 % Increase row height by 50%
 \renewcommand{\arraystretch}{1.25}
-
 % Increase column spacing
 \setlength{\tabcolsep}{12pt}
 
@@ -51,6 +56,9 @@
 
 \section{Założenia projektowe – wymagania}
 Test TAG
+\fg{width=\textwidth}{contents/configuration/SSH/1.png}
+\fg{width=\textwidth}{contents/configuration/SSH/2.png}
+% \fg{contents/configuration/SSH/1.png}
 \section{Opis użytych technologi}
 BBBBBBBBBBBB
 \section{Schemat logiczny projektowanej infrastruktury sieciowej}
