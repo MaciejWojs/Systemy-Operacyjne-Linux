@@ -1,0 +1,20 @@
+# nazwa domeny 
+option domain-name "BinaryBuilders.ns "; 
+option domain-search "BinaryBuilders.ns"; 
+# wskazanie nazwy lub adresu IP serwera DNS 
+option domain-name-servers 192.168.230.1; 
+# domyślny czas dzierżawy 
+default-lease-time 600; 
+# maksymalny czas dzierżawy 
+max-lease-time 7200; 
+# tryb pracy serwera 
+authoritative; 
+# określneie adresu sieci i maski 
+subnet 192.168.230.0 netmask 255.255.255.0 { 
+ # zakres przydzielanych adresów IP 
+ range dynamic-bootp 192.168.230.10 192.168.230.60; 
+ # adres rozgłoszeniowy 
+ option broadcast-address 192.168.230.255; 
+ # adres domyślnej bramy 
+ option routers 192.168.230.1; 
+}
