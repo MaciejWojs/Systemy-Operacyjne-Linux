@@ -1,0 +1,16 @@
+$TTL 86400 
+@ IN SOA svr06-BinaryBuilder.BinaryBuilders.ns. root.BinaryBuilders.ns. ( 
+ 2023032902 ;Serial (po każdej zmianie zwiększyć licznik 01,02 itd.) 
+ 3600 ;Refresh 
+ 1800 ;Retry 
+ 604800 ;Expire 
+ 86400 ;Minimum TTL 
+) 
+;Serwer Nazw 
+@ IN NS svr06-BinaryBuilder.BinaryBuilders.ns. 
+svr06-BinaryBuilder.BinaryBuilders.ns. IN A 192.168.230.1 
+;Odwrotny wpis dla Serwera Nazw 
+1 IN PTR svr06-BinaryBuilder.BinaryBuilders.ns. 
+;PTR adresów IP danych hostów 
+1 IN PTR poczta.BinaryBuilders.ns. 
+1 IN PTR www.BinaryBuilders.ns. 

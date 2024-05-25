@@ -1,0 +1,22 @@
+;; 86400 = 1 dzień 
+;; @ = BinaryBuilders.ns. 
+$TTL 86400 
+$ORIGIN BinaryBuilders.ns. 
+@ IN SOA svr06-BinaryBuilders.BinaryBuilders.ns. root.BinaryBuilders.ns. ( 
+ 2024032502 ;Serial (po każdej zmianie zwiększyć licznik 01, 02 itd) 
+ 3600 ;Refresh 
+ 1800 ;Retry 
+ 604800 ;Expire 
+ 86400 ;Minimum TTL 
+) 
+;Serwer Nazw 
+@ IN NS svr06-BinaryBuilders.BinaryBuilders.ns. 
+;Adres IP Serwera Nazw 
+svr06-BinaryBuilders IN A 192.168.230.1 
+;Serwer poczty w domenie 
+BinaryBuilders.ns. IN MX 10 poczta.BinaryBuilders.ns. 
+;Mapowanie nazw hostów na adresy IP 
+www IN A 192.168.230.1 
+poczta IN A 192.168.230.1 
+;Utworzenie aliasu 
+ftp IN CNAME www.BinaryBuilders.ns.
