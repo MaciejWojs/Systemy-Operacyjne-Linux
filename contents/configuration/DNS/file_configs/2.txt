@@ -18,5 +18,6 @@ BinaryBuilders.ns. IN MX 10 poczta.BinaryBuilders.ns.
 ;Mapowanie nazw hostów na adresy IP 
 www IN A 192.168.230.1 
 poczta IN A 192.168.230.1 
+sfs IN A 192.168.230.1
 ;Utworzenie aliasu 
 ftp IN CNAME www.BinaryBuilders.ns.
