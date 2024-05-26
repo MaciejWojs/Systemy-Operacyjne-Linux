@@ -6,6 +6,10 @@
 \usepackage{array}
 \usepackage{biblatex}
 \addbibresource{bibliography.bib}
+\usepackage{csquotes}
+%BinaryBuilders 
+
+\newcommand{\smaller}[1]{{\large #1}}
 
 \newcommand*{\fg}[3][!htb]{
       \begin{figure*}[#1]
@@ -13,7 +17,7 @@
       \end{figure*}
 }
 
-\title{\textbf{Akademia Nauk Stosowanych w Nowym Sączu\\Wydział Nauk Inżynieryjnych\newline \newline Systemy operacyjne – projekt\\studia stacjonarne\\semestr letni 2023/2024}}
+\title{\textbf{Akademia Nauk Stosowanych w Nowym Sączu}\\\smaller{Wydział Nauk Inżynieryjnych}\vspace*{1em} \\ \textbf{Systemy operacyjne – projekt}\vspace*{0.5em}\\\smaller{studia stacjonarne\\semestr letni 2023/2024}}
 % \author{Imie nazwisko}
 \date{}
 
@@ -22,9 +26,10 @@
 
 \textbf{Temat projektu:}
 \begin{enumerate}
-    \item Zaprojektować infrastrukturę informatyczną na potrzeby „wybranej firmy”. Realizacja
-          serwerowa w oparciu o system operacyjny Linux, np.: Fedora Server 39, stacje klienckie
-          np. Linux MINT.
+      \item Zaprojektować infrastrukturę informatyczną na potrzeby „wybranej firmy”. Realizacja
+      serwerowa w oparciu o system operacyjny Linux, np.\@ Fedora Server 39, stacje klienckie
+      np.\@ Linux MINT.
+
     \item Wdrożyć niezbędne usługi wynikające z założeń takie jak: SSH, DHCP, DNS, HTTP/S,
           motor bazodanowy (MySql)+PHP+phpMyAdmin, CMS WordPress, RAID, SAMBA,
           SQUID, Postfix(SMTP) + Dovecot(POP/IMAP), oraz wybraną usługę. Wdrożyć
