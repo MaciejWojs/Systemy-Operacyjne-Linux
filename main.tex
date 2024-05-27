@@ -18,7 +18,7 @@
 }
 
 \title{\textbf{Akademia Nauk Stosowanych w Nowym Sączu}\\\smaller{Wydział Nauk Inżynieryjnych}\vspace*{1em} \\ \textbf{Systemy operacyjne – projekt}\vspace*{0.5em}\\\smaller{studia stacjonarne\\semestr letni 2023/2024}}
-% \author{Imie nazwisko}
+\author{}
 \date{}
 
 \begin{document}
@@ -26,13 +26,13 @@
 
 \textbf{Temat projektu:}
 \begin{enumerate}
-      \item Zaprojektować infrastrukturę informatyczną na potrzeby „wybranej firmy”. Realizacja
+      \item Zaprojektować infrastrukturę informatyczną na potrzeby firmy BinaryBuilders. Realizacja
       serwerowa w oparciu o system operacyjny Linux, np.\@ Fedora Server 39, stacje klienckie
-      np.\@ Linux MINT.
+      np.\@ Linux MINT. %chktex 13
 
     \item Wdrożyć niezbędne usługi wynikające z założeń takie jak: SSH, DHCP, DNS, HTTP/S,
           motor bazodanowy (MySql)+PHP+phpMyAdmin, CMS WordPress, RAID, SAMBA,
-          SQUID, Postfix(SMTP) + Dovecot(POP/IMAP), oraz wybraną usługę. Wdrożyć
+          SQUID, Postfix(SMTP) + Dovecot(POP/IMAP), oraz wybraną usługę. Wdrożyć %chktex 36
           automatyzację przy użyciu skryptu np. Bash, oraz usługi cron.
     \item Cele projektu zweryfikować z założeniami zapisanymi w dokumencie „Szczegółowy
           zarys projektu”.
@@ -65,7 +65,54 @@ Test TAG
 \fg{width=\textwidth}{contents/configuration/SSH/2.png}
 % \fg{contents/configuration/SSH/1.png}
 \section{Opis użytych technologi}
-BBBBBBBBBBBB
+\subsection{SSH (Secure Shell)}
+SSH to protokół sieciowy, który umożliwia bezpieczne zdalne logowanie oraz wykonywanie poleceń na odległym serwerze. Zapewnia szyfrowanie komunikacji, co chroni przed podsłuchiwaniem oraz atakami typu man-in-the-middle.
+
+\subsection{DHCP (Dynamic Host Configuration Protocol)}
+DHCP to protokół używany do automatycznego przydzielania adresów IP i innych parametrów konfiguracyjnych urządzeniom w sieci. Ułatwia zarządzanie siecią poprzez automatyczne przypisywanie ustawień.
+
+\subsection{DNS (Domain Name System)}
+DNS to system, który przekształca łatwe do zapamiętania nazwy domen (np.\ www.example.com) na adresy IP, które są wykorzystywane przez urządzenia sieciowe do komunikacji. DNS działa jak książka telefoniczna internetu.
+
+\subsection{HTTP/S (Hypertext Transfer Protocol/Secure)}
+HTTP to protokół komunikacyjny używany do przesyłania stron internetowych. HTTPS to jego bezpieczna wersja, która wykorzystuje TLS/SSL do szyfrowania danych, zapewniając poufność i integralność komunikacji między przeglądarką a serwerem.
+
+\subsection{MySQL}
+Popularny system zarządzania relacyjnymi bazami danych. Umożliwia przechowywanie i zarządzanie dużą ilością danych w strukturach tabelarycznych.
+
+\subsection{PHP}
+Skryptowy język programowania, często używany do tworzenia dynamicznych stron internetowych. PHP może komunikować się z bazami danych, takimi jak MySQL.
+
+\subsection{phpMyAdmin}
+Narzędzie webowe do zarządzania bazami danych MySQL. 
+Umożliwia wykonywanie operacji na bazach danych za pomocą interfejsu graficznego.
+
+\subsection{CMS WordPress}
+WordPress to system zarządzania treścią (CMS), który pozwala na łatwe tworzenie i zarządzanie stronami internetowymi. Jest bardzo popularny ze względu na swoją elastyczność, prostotę obsługi oraz bogaty ekosystem wtyczek i motywów.
+
+\subsection{RAID (Redundant Array of Independent Disks)}
+RAID to technologia, która łączy kilka dysków twardych w jedną jednostkę logiczną w celu poprawy wydajności i/lub redundancji danych. Istnieje kilka poziomów RAID, z których każdy oferuje różne kombinacje wydajności i bezpieczeństwa danych.
+
+\subsection{SAMBA}
+SAMBA to pakiet oprogramowania, który umożliwia integrację systemów operacyjnych Linux/Unix z sieciami Windows. Pozwala na udostępnianie plików i drukarek w sieci oraz współpracę z domenami Windows (Active Directory).
+
+\subsection{SQUID}
+SQUID to serwer proxy i buforujący, który może przyspieszyć dostęp do zasobów internetowych poprzez przechowywanie często używanych danych w lokalnej pamięci podręcznej. Może również służyć jako filtr treści i narzędzie do monitorowania ruchu sieciowego.
+
+\subsection{Postfix (SMTP) + Dovecot (POP/IMAP)}
+\subsubsection{Postfix}
+Serwer pocztowy obsługujący protokół SMTP, używany do wysyłania i odbierania wiadomości e-mail. Jest znany z wydajności i bezpieczeństwa.
+
+\subsubsection{Dovecot}
+Serwer IMAP i POP3 używany do odbierania i przechowywania wiadomości e-mail. Jest zoptymalizowany pod kątem wydajności i bezpieczeństwa, oferując wsparcie dla nowoczesnych standardów pocztowych.
+
+\subsection{Automatyzacja za pomocą skryptów Bash i usług cron}
+\subsubsection{Skrypty Bash}
+Skrypty napisane w Bash (Bourne Again Shell) służą do automatyzacji zadań w systemach Unix/Linux. Mogą być używane do instalacji oprogramowania, konfiguracji systemu, zarządzania plikami i wielu innych zadań.
+
+\subsubsection{cron}
+Usługa systemowa w Unix/Linux, która pozwala na planowanie zadań do wykonania w określonym czasie lub regularnych odstępach czasu. Jest używana do automatyzacji zadań takich jak backup, aktualizacje systemu czy uruchamianie skryptów.
+
 \section{Schemat logiczny projektowanej infrastruktury sieciowej}
 CCCCCCCCCC
 \section{Procedury instalacyjne poszczególnych usług}
