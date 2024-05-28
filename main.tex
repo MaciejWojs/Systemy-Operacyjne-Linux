@@ -7,6 +7,7 @@
 \usepackage{biblatex}
 \addbibresource{bibliography.bib}
 \usepackage{csquotes}
+\usepackage[shortlabels]{enumitem}
 %BinaryBuilders 
 
 \newcommand{\smaller}[1]{{\large #1}}
@@ -60,9 +61,50 @@
 \newpage
 
 \section{Założenia projektowe – wymagania}
-Test TAG
-\fg{width=\textwidth}{contents/configuration/SSH/1.png}
-\fg{width=\textwidth}{contents/configuration/SSH/2.png}
+\begin{enumerate}[a)] % chktex 9  chktex 10
+      \item Systemy operacyjne: Fedora Server 39 lub inny serwer z rodziny Linux, oraz system kliencki 
+      np. Linux MINT. 
+      \item zarządzanie serwerem poprzez SSH, oraz emulator putty.exe 
+      \item nazwa serwera ma być zgodna z nazewnictwem: svrXX-firma, gdzie XX oznaczają dwie 
+      ostatnie cyfry numeru albumu wykonawcy, a firma to skrót nazwy swojej 
+      firmy (niepowtarzalny) – wymyślonej, 
+      \item na podstawie nazwy firmy należy założyć lokalną domenę o nazwie np. firma.ns i 
+      skonfigurować usługę DNS Server, 
+      \item adres IP serwera, zakres adresacji IP, oraz brama domyślna od strony sieci wewnętrznej 
+      VirtualBOXa (sieć LAN firmy) w której ma działać serwer DHCP ma mieć następujące 
+      wartości:
+      \vspace{-2mm}
+      % \begin{table}[h]
+            \begin{center}
+                  \begin{tabular}{cc}
+                        adres IP:& 192.168.230.1/24,\\
+                        zakres:& 192.168.230.10–60\\
+                        brama domyślna:  & 192.168.230.1\\
+                  \end{tabular}
+            \end{center}
+      % \end{table}
+      \vspace{-2mm}
+      \item należy utworzyć macierz dyskowa programową na poziomie RAID 5 z dyskiem zapasowym. 
+      Uzyskać wypadkową pojemności macierzy 10GB. Przestrzeń macierzy podzielić na dwie 
+      równe partycje, 
+      \item Pierwszą partycję zamontować do punktu \textbf{/dysksieciowy}, a drugą do punktu \textbf{/kopie}. 
+      Zapewnić ich automatyczne montowanie podczas startu systemu, 
+      \item  serwer ma udostępniać zasób sieciowy o adresie UNC \textbf{\textbackslash \textbackslash sfs.firma.ns\textbackslash dysk} odnoszący się do systemu plików \textbf{/dysksieciowy} (ppkt. g), 
+      \item należy wdrożyć usługę WEB Server z obsługą PHP, oraz serwer bazodanowy zarządzany przez 
+      phpMyAdmin, oraz CMS WordPress, skonfigurować UserDir dla WEB Serwer'a,
+      \item dostęp do sieci Internet z sieci wewnętrznej ma się odbywać za pośrednictwem serwera 
+      PROXY(squid), a aktywność pracowników firmy ma być monitorowana,
+      \item w firmie należy wdrożyć serwer pocztowy, oraz klienta mail, 
+      \item zapewnić aby popularne usługi były dostępne jako oddzielne nazwy hostów, jak np.: 
+            \begin{itemize}
+                  \item \textbf{www.firma.ns} (serwer www), 
+                  \item \textbf{poczta.firma.ns} (serwer poczty), 
+                  \item \textbf{sfs.firma.ns} (serwer samby), 
+            \end{itemize}
+      \item wdrożyć automatyczną archiwizację systemu plików /home zawierającego katalogi użytkowników. Archiwizacja ma rozpoczynać się automatycznie codziennie o 21:00. W wyniku archiwizacji ma powstać plik\\ \textbf{home\_20240510.tar.gz} zapisany w \textbf{/kopie} (ppkt. g)
+      \item Dodatkowo wdrożyć dowolną usługę, ale taką która nie była wdrażana podczas zajęć.
+       
+\end{enumerate}
 % \fg{contents/configuration/SSH/1.png}
 \section{Opis użytych technologi}
 \subsection{SSH (Secure Shell)}
@@ -115,6 +157,9 @@ Usługa systemowa w Unix/Linux, która pozwala na planowanie zadań do wykonania
 
 \section{Schemat logiczny projektowanej infrastruktury sieciowej}
 CCCCCCCCCC
+Test TAG
+\fg{width=\textwidth}{contents/configuration/SSH/1.png}
+\fg{width=\textwidth}{contents/configuration/SSH/2.png}
 \section{Procedury instalacyjne poszczególnych usług}
 DDDDDDDDDDDDDD
 \section{Testy działania wdrożonych usług}
