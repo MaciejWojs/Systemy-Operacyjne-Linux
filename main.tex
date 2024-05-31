@@ -344,12 +344,26 @@ W następnym kroku postanowiłem ułatwić wpisywanie hasła, gdy korzystam z su
 
 Efekt powyższego kroku: 
 \fg{contents/OS_installation/Fedora40/26.png}{Zwiększenie wygody wpisywania haseł – efekt działania po zmianach}{Efekt działania zmiany ustawień}
-% \fg{contents/configuration/SSH/2.png}{podlaczenie poprzez putty}
-% \fg{contents/configuration/SSH/1.png}{ssh}
 \newpage
-% \fg{contents/configuration/SSH/2.png}{podlaczenie poprzez putty}
+
+\subsection{Konfiguracja SSH}
+Aby umożliwić połączenie z SSH na serwerze (VirtualBox) w pierszej kolejności potrzebe jest ustawienie poprawnego adresu IP z sieci lokalnej dla karty ustawionej na sieć mostkowaną (w moim przypadku jest to enp0s8)
+\fg{contents/configuration/SSH/1.png}{ssh}{ssh}
+
+
+W serwerze Fedora 40 SSH jest domyślnie włączone i skonfigurowane. Wystarczy tylko się połączyć
+\fg{contents/configuration/SSH/2.png}{Konfiguracja aplikacji PuTTY}{Konfiguracja PuTTY}
+\newpage
+
+Próba zalogowania na konto root'a: 
+\fg{contents/configuration/SSH/3.png}{Podlaczenie poprzez PuTTY na konto root'a}{Próba podłączenia poprzez PuTTY}
+
+Wynik powyższego kroku:
+\fg{contents/configuration/SSH/4.png}{Wynik połączenia poprzez PuTTY}{Wynik połączenia poprzez PuTTY}
+
+\newpage
 \section{Testy działania wdrożonych usług}
-EEEEEEEEEEE
+żżżżEEEEEEEEEEE
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFF
 \section{Wnioski}
