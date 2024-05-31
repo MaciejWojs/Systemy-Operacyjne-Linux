@@ -11,13 +11,19 @@
 \usepackage{ifthen}
 \usepackage{caption}
 % \usepackage{verbatim}
-% \usepackage{listings}
+\usepackage{listings}
 \usepackage{fancyvrb}
+\usepackage{fvextra}
 \usepackage{framed}
+\usepackage{xcolor}
 %BinaryBuilders 
 
 \DefineVerbatimEnvironment{VerbatimBorder}{Verbatim}
 {frame=single, framesep=10pt, rulecolor=\color{black}, framerule=0.4pt}
+
+\RecustomVerbatimCommand{\VerbatimInput}{VerbatimInput}%
+{frame=single, framesep=10pt, rulecolor=\color{black}, framerule=0.4pt, breaklines=true}
+
 \newcommand{\smaller}[1]{{\large #1}}
 % \newcommand{\zdj}[2][width=\textwidth]{\includegraphics[#1]{#2}}
 \newcommand*{\zdj}[2][\textwidth]{\includegraphics[width=#1]{#2}}
@@ -32,10 +38,15 @@
 
 \newcommand*{\fgc}[5][!htb]{
       \begin{figure*}[#1]
+            \phantomsection\label{fig:#5}
             \zdj{#2}
             \caption[#4]{#3}
-            \label{fig:#5}
       \end{figure*}
+}
+
+\newcommand*{\code}[1]{%
+  \SaveVerb{#1}%
+  \UseVerb{#1}%
 }
 
 \title{\textbf{Akademia Nauk Stosowanych w Nowym Sączu}\\\smaller{Wydział Nauk Inżynieryjnych}\vspace*{1em} \\ \textbf{Systemy operacyjne – projekt}\vspace*{0.5em}\\\smaller{studia stacjonarne\\semestr letni 2023/2024}}
@@ -369,9 +380,106 @@ Aby zmienić nazwę serwera (hostname) można użyć komendy:
 hostnamectl set-hostname nazwa-komputera
 \end{Verbatim}
 \fg{contents/configuration/hostname/1.png}{Zmiana nazwy serwera}{Zmiana nazwy serwera}
-\newpage
 
+\subsection{DNS – instalacja i konfiguracja}
+Aby zainstalować oprogramowanie do stworzenia serwera DNS należy wydać polecenie:
+
+\begin{itemize}
+      \item Jeśli jesteś na koncie root:
+\begin{Verbatim}[frame=single]
+dnf install bind bind-utils -y
+\end{Verbatim}
+
+      \item jeżeli jesteś na innym koncie ale jesteś w grupie sudoers:  
+\begin{Verbatim}[frame=single]
+sudo dnf install bind bind-utils -y
+\end{Verbatim}
+\end{itemize}
+Po zainstalowaniu wymaganych pakietów należy wykonać kopię zapasową plików konfiguracyjnych. Można to zrobić komendą: 
+
+\begin{itemize}
+      \item Jeśli jesteś na koncie root:
+\begin{Verbatim}[frame=single]
+cp /etc/named.conf /etc/named.conf.org
+\end{Verbatim}
+
+      \item jeżeli jesteś na innym koncie ale jesteś w grupie sudoers:  
+\begin{Verbatim}[frame=single]
+sudo cp /etc/named.conf /etc/named.conf.org
+\end{Verbatim}
+\end{itemize}
+
+\fg{contents/configuration/DNS/2.png}{Instalacja DNS}{Instalacja DNS}
+
+Następnie trzeba skonfigurować plik /etc/named.conf
+Można zrobić to komendą:
+\begin{Verbatim}
+sudo nano /etc/named.conf
+\end{Verbatim} 
+\fg{contents/configuration/DNS/2.png}{Instalacja DNS}{Instalacja DNS}
+\newpage
+\VerbatimInput[fontsize=\small]{contents/configuration/DNS/file_configs/1.txt}
+Powyżej znajduje się zawatość pliku /etc/named.conf, którą należy wprowadzić.
+\fg{contents/configuration/DNS/3.png}{zawatość named.conf}{zawatość named.conf}
+
+W następnym kroku trzeba utworzyć plik strefy podstawowej. W moim przypadku jest to plik /var/BinaryBuilders.ns.lan\_in. Zawartość tego pliku:
+\newpage
+\VerbatimInput{contents/configuration/DNS/file_configs/2.txt}
+\fg{contents/configuration/DNS/4.png}{zawatość pliku strefy podstawowej}{zawatość pliku strefy podstawowej}
+W kolejnym kroku trzeba utworzyć plik strefy dla przeszukiwania wstecznego. W moim przypadku jest to plik /var/230.168.192.lan\_in. Zawartość tego pliku:
+\VerbatimInput{contents/configuration/DNS/file_configs/3.txt}
+\vspace{-10pt}
+\fg{contents/configuration/DNS/5.png}{zawatość pliku strefy dla przeszukiwania wstecznego}{zawatość pliku strefy dla przeszukiwania wstecznego}
+
+% \newpage
+Następnym krokiem jest uruchomienie kilku komned:
+\begin{Verbatim}[frame=single]
+      systemctl start named 
+      systemctl enable named
+      firewall-cmd --add-service=dns --permanent 
+      firewall-cmd --reload
+      nmcli con mod enp0s9 ipv4.dns 192.168.230.1
+      nmcli con down enp0s9 && nmcli con up enp0s9
+      rndc reload 
+      rndc status
+\end{Verbatim}
+
+Wytłumaczenie powyższych poleceń:
+\begin{itemize}
+      \item systemctl start named
+      
+      Komenda ta uruchomi usługę 
+      \item systemctl enable named
+      
+Polecenie to spowoduje że usługa będzie uruchamiana automatycznie przy włączeniu serwera 
+\item firewall-cmd --add-service=dns --permanent 
+
+Dodaje regułę zapory sieciowej, aby na stałe zezwalać na ruch DNS.
+\item firewall-cmd --reload
+
+Przeładowuje ustawienia zapory sieciowej, aby zastosować wprowadzone zmiany.
+\item nmcli con mod enp0s9 ipv4.dns 192.168.230.1
+
+Modyfikuje połączenie enp0s9, aby używało serwera DNS o adresie 192.168.230.1.
+\item nmcli con down enp0s9 \&\& nmcli con up enp0s9
+
+Dezaktywuje i ponownie aktywuje połączenie sieciowe enp0s9.
+\item rndc reload 
+
+Przeładowuje konfigurację serwera serwera DNS.
+\item rndc status
+
+wyświetla status serwera serwera DNS.
+\end{itemize}
+
+\fg{contents/configuration/DNS/7.png}{Uruchomienie usługi DNS}{Uruchomienie usługi DNS}
+
+Jak widać na zrzucie ekranu powyżej miałem problemy z błędną konfiguracją jednego z pliku, jednakże udało mi się naprawić problem i uruchomić usługę DNS.
+Kolejnym i ostatnim krokiem jest test usługi DNS. Wykonać go można korzystając z drugiej maszyny wirtualnej. Przykładowy test DNS możesz zobaczyć
+\hyperref[fig:dns-test]{tutaj.}
 \section{Testy działania wdrożonych usług}
+\subsection{DNS}
+\fgc{contents/configuration/DNS/8.png}{Test DNS}{Test DNS}{dns-test}
 żżżżEEEEEEEEEEE
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFF
