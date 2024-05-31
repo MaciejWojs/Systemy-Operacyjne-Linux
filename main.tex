@@ -8,14 +8,33 @@
 \addbibresource{bibliography.bib}
 \usepackage{csquotes}
 \usepackage[shortlabels]{enumitem}
+\usepackage{ifthen}
+\usepackage{caption}
+% \usepackage{verbatim}
+% \usepackage{listings}
+\usepackage{fancyvrb}
+\usepackage{framed}
 %BinaryBuilders 
 
+\DefineVerbatimEnvironment{VerbatimBorder}{Verbatim}
+{frame=single, framesep=10pt, rulecolor=\color{black}, framerule=0.4pt}
 \newcommand{\smaller}[1]{{\large #1}}
+% \newcommand{\zdj}[2][width=\textwidth]{\includegraphics[#1]{#2}}
+\newcommand*{\zdj}[2][\textwidth]{\includegraphics[width=#1]{#2}}
+% \newcommand*{\lbl}[1][]{\label{#1}}
 
 \newcommand*{\fg}[4][!htb]{
       \begin{figure*}[#1]
-      \includegraphics[#2]{#3}
-      \caption{#4}
+            \zdj{#2}
+            \caption[#4]{#3}
+      \end{figure*}
+}
+
+\newcommand*{\fgc}[5][!htb]{
+      \begin{figure*}[#1]
+            \zdj{#2}
+            \caption[#4]{#3}
+            \label{fig:#5}
       \end{figure*}
 }
 
@@ -29,15 +48,15 @@
 \textbf{Temat projektu:}
 \begin{enumerate}
       \item Zaprojektować infrastrukturę informatyczną na potrzeby firmy BinaryBuilders. Realizacja
-      serwerowa w oparciu o system operacyjny Linux, np.\@ Fedora Server 39, stacje klienckie
-      np.\@ Linux MINT. %chktex 13
+            serwerowa w oparciu o system operacyjny Linux, np.\@ Fedora Server 39, stacje klienckie
+            np.\@ Linux MINT. %chktex 13
 
-    \item Wdrożyć niezbędne usługi wynikające z założeń takie jak: SSH, DHCP, DNS, HTTP/S,
-          motor bazodanowy (MySql)+PHP+phpMyAdmin, CMS WordPress, RAID, SAMBA,
-          SQUID, Postfix(SMTP) + Dovecot(POP/IMAP), oraz wybraną usługę. Wdrożyć %chktex 36
-          automatyzację przy użyciu skryptu np. Bash, oraz usługi cron.
-    \item Cele projektu zweryfikować z założeniami zapisanymi w dokumencie „Szczegółowy
-          zarys projektu”.
+      \item Wdrożyć niezbędne usługi wynikające z założeń takie jak: SSH, DHCP, DNS, HTTP/S,
+            motor bazodanowy (MySql)+PHP+phpMyAdmin, CMS WordPress, RAID, SAMBA,
+            SQUID, Postfix(SMTP) + Dovecot(POP/IMAP), oraz wybraną usługę. Wdrożyć %chktex 36
+            automatyzację przy użyciu skryptu np. Bash, oraz usługi cron.
+      \item Cele projektu zweryfikować z założeniami zapisanymi w dokumencie „Szczegółowy
+            zarys projektu”.
 \end{enumerate}
 
 % Increase row height by 50%
@@ -46,15 +65,15 @@
 \setlength{\tabcolsep}{12pt}
 
 \begin{table}[h!]
-    \centering
-    \begin{tabular}{cccccc}
-    Imie i nazwisko: &&&& Data oddania: \\
-    Maciej Wójs &&&& \today \\
-    Nr grupy: &&&& Ocena: \\
-    L3 &  \\
-    \end{tabular}
-    % \caption{Sample Table}
-    % \label{tab:sample_table}
+      \centering
+      \begin{tabular}{cccccc}
+            Imie i nazwisko: &   &  &  & Data oddania: \\
+            Maciej Wójs      &   &  &  & \today        \\
+            Nr grupy:        &   &  &  & Ocena:        \\
+            L3               &                         \\
+      \end{tabular}
+      % \caption{Sample Table}
+      % \label{tab:sample_table}
 \end{table}
 
 \newpage
@@ -65,50 +84,49 @@
 
 \section{Założenia projektowe – wymagania}
 \begin{enumerate}[a)] % chktex 9  chktex 10
-      \item Systemy operacyjne: Fedora Server 39 lub inny serwer z rodziny Linux, oraz system kliencki 
-      np. Linux MINT. 
-      \item zarządzanie serwerem poprzez SSH, oraz emulator putty.exe 
-      \item nazwa serwera ma być zgodna z nazewnictwem: svrXX-firma, gdzie XX oznaczają dwie 
-      ostatnie cyfry numeru albumu wykonawcy, a firma to skrót nazwy swojej 
-      firmy (niepowtarzalny) – wymyślonej, 
-      \item na podstawie nazwy firmy należy założyć lokalną domenę o nazwie np. firma.ns i 
-      skonfigurować usługę DNS Server, 
-      \item adres IP serwera, zakres adresacji IP, oraz brama domyślna od strony sieci wewnętrznej 
-      VirtualBOXa (sieć LAN firmy) w której ma działać serwer DHCP ma mieć następujące 
-      wartości:
-      \vspace{-2mm}
-      % \begin{table}[h]
+      \item Systemy operacyjne: Fedora Server 39 lub inny serwer z rodziny Linux, oraz system kliencki
+            np. Linux MINT.
+      \item zarządzanie serwerem poprzez SSH, oraz emulator putty.exe
+      \item nazwa serwera ma być zgodna z nazewnictwem: svrXX-firma, gdzie XX oznaczają dwie
+            ostatnie cyfry numeru albumu wykonawcy, a firma to skrót nazwy swojej
+            firmy (niepowtarzalny) – wymyślonej,
+      \item na podstawie nazwy firmy należy założyć lokalną domenę o nazwie np. firma.ns i
+            skonfigurować usługę DNS Server,
+      \item adres IP serwera, zakres adresacji IP, oraz brama domyślna od strony sieci wewnętrznej
+            VirtualBOXa (sieć LAN firmy) w której ma działać serwer DHCP ma mieć następujące
+            wartości:
+            \vspace{-2mm}
+            % \begin{table}[h]
             \begin{center}
                   \begin{tabular}{cc}
-                        adres IP:& 192.168.230.1/24,\\
-                        zakres:& 192.168.230.10–60\\
-                        brama domyślna:  & 192.168.230.1\\
+                        adres IP:       & 192.168.230.1/24, \\
+                        zakres:         & 192.168.230.10–60 \\
+                        brama domyślna: & 192.168.230.1     \\
                   \end{tabular}
             \end{center}
-      % \end{table}
-      \vspace{-2mm}
-      \item należy utworzyć macierz dyskowa programową na poziomie RAID 5 z dyskiem zapasowym. 
-      Uzyskać wypadkową pojemności macierzy 10GB. Przestrzeń macierzy podzielić na dwie 
-      równe partycje, 
-      \item Pierwszą partycję zamontować do punktu \textbf{/dysksieciowy}, a drugą do punktu \textbf{/kopie}. 
-      Zapewnić ich automatyczne montowanie podczas startu systemu, 
-      \item  serwer ma udostępniać zasób sieciowy o adresie UNC \textbf{\textbackslash \textbackslash sfs.firma.ns\textbackslash dysk} odnoszący się do systemu plików \textbf{/dysksieciowy} (ppkt. g), 
-      \item należy wdrożyć usługę WEB Server z obsługą PHP, oraz serwer bazodanowy zarządzany przez 
-      phpMyAdmin, oraz CMS WordPress, skonfigurować UserDir dla WEB Serwer'a,
-      \item dostęp do sieci Internet z sieci wewnętrznej ma się odbywać za pośrednictwem serwera 
-      PROXY(squid), a aktywność pracowników firmy ma być monitorowana,
-      \item w firmie należy wdrożyć serwer pocztowy, oraz klienta mail, 
-      \item zapewnić aby popularne usługi były dostępne jako oddzielne nazwy hostów, jak np.: 
+            % \end{table}
+            \vspace{-2mm}
+      \item należy utworzyć macierz dyskowa programową na poziomie RAID 5 z dyskiem zapasowym.
+            Uzyskać wypadkową pojemności macierzy 10GB. Przestrzeń macierzy podzielić na dwie
+            równe partycje,
+      \item Pierwszą partycję zamontować do punktu \textbf{/dysksieciowy}, a drugą do punktu \textbf{/kopie}.
+            Zapewnić ich automatyczne montowanie podczas startu systemu,
+      \item  serwer ma udostępniać zasób sieciowy o adresie UNC \textbf{\textbackslash \textbackslash sfs.firma.ns\textbackslash dysk} odnoszący się do systemu plików \textbf{/dysksieciowy} (ppkt. g),
+      \item należy wdrożyć usługę WEB Server z obsługą PHP, oraz serwer bazodanowy zarządzany przez
+            phpMyAdmin, oraz CMS WordPress, skonfigurować UserDir dla WEB Serwer'a,
+      \item dostęp do sieci Internet z sieci wewnętrznej ma się odbywać za pośrednictwem serwera
+            PROXY(squid), a aktywność pracowników firmy ma być monitorowana,
+      \item w firmie należy wdrożyć serwer pocztowy, oraz klienta mail,
+      \item zapewnić aby popularne usługi były dostępne jako oddzielne nazwy hostów, jak np.:
             \begin{itemize}
-                  \item \textbf{www.firma.ns} (serwer www), 
-                  \item \textbf{poczta.firma.ns} (serwer poczty), 
-                  \item \textbf{sfs.firma.ns} (serwer samby), 
+                  \item \textbf{www.firma.ns} (serwer www),
+                  \item \textbf{poczta.firma.ns} (serwer poczty),
+                  \item \textbf{sfs.firma.ns} (serwer samby),
             \end{itemize}
-      \item wdrożyć automatyczną archiwizację systemu plików /home zawierającego katalogi użytkowników. Archiwizacja ma rozpoczynać się automatycznie codziennie o 21:00. W wyniku archiwizacji ma powstać plik\\ \textbf{home\_20240510.tar.gz} zapisany w \textbf{/kopie} (ppkt. g)
+      \item wdrożyć automatyczną archiwizację systemu plików /home zawierającego katalogi użytkowników. Archiwizacja ma rozpoczynać się automatycznie codziennie o 21:00. W wyniku archiwizacji ma powstać plik\\ \textbf{home\_20240510.tar.gz} zapisany w \textbf{/kopie} (ppkt\. g)
       \item Dodatkowo wdrożyć dowolną usługę, ale taką która nie była wdrażana podczas zajęć.
-       
+
 \end{enumerate}
-% \fg{contents/configuration/SSH/1.png}
 \section{Opis użytych technologi}
 \subsection{SSH (Secure Shell)}
 SSH to protokół sieciowy, który umożliwia bezpieczne zdalne logowanie oraz wykonywanie poleceń na odległym serwerze. Zapewnia szyfrowanie komunikacji, co chroni przed podsłuchiwaniem oraz atakami typu man-in-the-middle.
@@ -159,13 +177,177 @@ Skrypty napisane w Bash (Bourne Again Shell) służą do automatyzacji zadań w 
 Usługa systemowa w Unix/Linux, która pozwala na planowanie zadań do wykonania w określonym czasie lub regularnych odstępach czasu. Jest używana do automatyzacji zadań takich jak backup, aktualizacje systemu czy uruchamianie skryptów.
 
 \section{Schemat logiczny projektowanej infrastruktury sieciowej}
-\fg{width=\textwidth}{contents/VirtualBox-network-setup/setup.png}{Schemat logiczny sieci}
+\fg{contents/VirtualBox-network-setup/setup.png}{Schemat logiczny sieci}{Schemat logiczny sieci}
 \newpage
 
-\fg{width=\textwidth}{contents/configuration/SSH/1.png}{ssh}
-\fg{width=\textwidth}{contents/configuration/SSH/2.png}{podlaczenie poprzez putty}
 \section{Procedury instalacyjne poszczególnych usług}
-DDDDDDDDDDDDDD
+\subsection{Intalacja systeu klienta – Linux Mint}
+\subsubsection{Proces instalacji}
+
+\fg[h]{contents/OS_installation/Linux_mint/1.png}{Tworzenie nowej maszyny wirtualnej. Ustawienia nazwy, lokalizacji dysku oraz wybór pliku ISO systemu operacyjnego.}{Tworzenie nowej maszyny wirtualnej}
+
+Pierwszym krokiem jest utworzenie nowej maszyny wirtualnej (VM). W tym etapie określa się nazwę maszyny, lokalizację dysku, gdzie będzie przechowywana, oraz wybiera odpowiedni plik ISO z systemem Linux Mint.
+
+\fg{contents/OS_installation/Linux_mint/2.png}{Przydzielanie zasobów maszynie wirtualnej, takich jak pamięć RAM i procesor.}{Przydzielanie zasobów maszynie wirtualnej}
+
+W kolejnym kroku przydzielane są zasoby dla maszyny wirtualnej, w tym ilość pamięci RAM oraz liczba rdzeni procesora.
+
+% \newpage
+\fg{contents/OS_installation/Linux_mint/3.png}{Określenie rozmiaru dysku wirtualnego.}{Określenie rozmiaru dysku wirtualnego.}
+
+Następnie należy zdefiniować rozmiar wirtualnego dysku twardego, który będzie używany przez maszynę wirtualną.
+
+\fg{contents/OS_installation/Linux_mint/4.png}{Podsumowanie konfiguracji maszyny wirtualnej przed rozpoczęciem instalacji systemu.}{Podsumowanie konfiguracji maszyny wirtualnej}
+
+Po skonfigurowaniu wszystkich ustawień, wyświetlane jest podsumowanie zawierające wszystkie wybrane opcje dla nowo utworzonej maszyny wirtualnej.
+
+\newpage
+
+\fg{contents/OS_installation/Linux_mint/5.png}{Rozpoczęcie instalacji Linux Mint – wybór języka instalacji.}{Rozpoczęcie instalacji Linux Mint}
+
+Rozpoczyna się proces instalacji Linux Mint. Pierwszym krokiem jest wybór języka, który będzie używany podczas instalacji i w systemie.
+
+\fg{contents/OS_installation/Linux_mint/6.png}{Wybór trybu instalacji na dysku twardym.}{Wybór trybu instalacji na dysku twardym.}
+
+Następnie użytkownik wybiera sposób instalacji systemu na dysku twardym, na przykład automatyczne partycjonowanie lub ręczne tworzenie partycji.
+
+\newpage
+
+\fg{contents/OS_installation/Linux_mint/7.png}{Tworzenie konta użytkownika i konfiguracja podstawowych ustawień.}{Tworzenie konta użytkownika}
+
+Kolejnym krokiem jest utworzenie konta użytkownika, wprowadzenie nazwy użytkownika, hasła oraz nazwy komputera.
+
+\fg{contents/OS_installation/Linux_mint/8.png}{Zakończenie instalacji systemu Linux Mint.}{Zakończenie instalacji systemu Linux Mint.}
+Wyświetlony zostaje monit z prośbą o usunięcie nośnika instalacyjnego.
+Po zakończeniu instalacji system wyświetla ekran informujący o pomyślnym zakończeniu procesu.
+
+\newpage
+
+\subsubsection{Wstępna konfiguracja systemu}
+
+\fg{contents/OS_installation/Linux_mint/9.png}{Instalacja dodatków gościa dla poprawy wydajności i integracji z systemem hosta.}{Instalacja dodatków gościa}
+
+Po zainstalowaniu systemu operacyjnego warto zainstalować dodatki gościa, które poprawiają integrację maszyny wirtualnej z systemem hosta, co zwiększa komfort pracy.
+
+\fg{contents/OS_installation/Linux_mint/10.png}{Aktualizacja pakietów systemowych.}{Aktualizacja pakietów}
+
+Ostatnim krokiem wstępnej konfiguracji jest aktualizacja pakietów systemowych, aby zapewnić, że system operacyjny ma najnowsze poprawki i funkcje.
+\newpage
+\subsection{Intalacja serwera – Fedora 40}
+\subsubsection{Proces instalacji}
+%\fg{contents/OS_installation/Fedora40/1.png}{Analogicznie jak w przypadku instalacji Linux Mint – ustwawiam nazwie}
+% \fg{contents/OS_installation/Fedora40/2.png}{1}
+% \fg{contents/OS_installation/Fedora40/3.png}{1}
+\fg{contents/OS_installation/Fedora40/4.png}{Analogicznie jak w przypadku instalacji Linux Mint – wymagane jest ustawienie nazwy maszyny wirtualnej, przydzielenie jej zasobów, ustalenie rozmiaru dysku. Powyższe zdjęcie ukazuje ekran z podsumowaniem wybranych opcji}{Podsumowanie maszyny wirtualnej Fedora 40}
+Aby maszyna wirtualna miała dostęp do internetu wymagane jest dodanie karty sieciowej NAT, co widać na poniższym zdjęciu.
+\fg{contents/OS_installation/Fedora40/5.png}{Dodanie pierszej karty sieciowej – NAT}{Dodanie pierszej karty sieciowej}
+\newpage
+Druga karta sieciowa jest dodana w celu połączenia się hosta z maszyną wirtualną poprzez protokół SSH oraz udostępnienia usług takich jak http czy samba. Połączenie poprzez SSH umożliwia łatwiejszą konfigurację maszyny wirtualnej.
+\fg{contents/OS_installation/Fedora40/6.png}{Dodanie pierszej drugiej karty sieciowej – sieć mostkowana (bridged)}{Dodanie drugiej karty sieciowej}
+
+Trzecia karta sieciowa posłuży do stworzenia sieci wewnętrznej dla maszyn wirtualnych w sposób taki aby się one wzajemnie widziały (tzn. były dostępne), a nie były dostępne z poziomu hosta.
+\fg{contents/OS_installation/Fedora40/7.png}{Dodanie pierszej trzeciej karty sieciowej – sieć wewnętrzna}{Dodanie trzeciej karty sieciowej}
+\newpage
+Po dodaniu kart sieciowych można uruchomić maszynę wirtualną. Po chwili ukazuje się menu grub z opcją instalacji Fedory 40. Tą opcję należy wybrać w celu dalszej instalacji.
+\fg{contents/OS_installation/Fedora40/8.png}{Uruchomienie instalatora Fedory.}{Uruchomienie instalatora Fedory.}
+
+W następnym kroku wybiera się język instalatora oraz układ klawiatury.
+\fg{contents/OS_installation/Fedora40/9.png}{Rozpoczęcie instalacji Fedora 40 – wybór języka instalacji.}{Rozpoczęcie instalacji Fedora}
+\newpage
+
+W kolejnym kroku wybieram dysk na którym ma zostać zainstalowany system. W tym miejsco można podzielić dysk na partycje (podzielić na części które w systemie będą widoczne jako samodzielne dyski), sformatować go, zaszyfrować, wybrać system plików (np. ext3, ext4, zfs).
+\fg{contents/OS_installation/Fedora40/10.png}{Wybór dysku na którym zostanie zainstalowany serwer}{Wybór dysku instalacji}
+
+
+Następnie przechodzę do zakładki z ustawieniami dotyczącymi konta root. W tej zakładce ustwawiam hasło do konta oraz zezwalam na połączenia SSH tym kontem. Na serwerze produkcyjnym połączenie poprzez konto root nie jest zalecanym rozwiązaniem, gdyż stanowi zagrożenie bezpieczeństwa sieci firmowej.
+\fg{contents/OS_installation/Fedora40/11.png}{Ustawienie konta root – włączenie konta, ustawienie hasła i zezwolenie na połączenie ssh jako root}{Ustawienie konta root}
+\newpage
+
+Po ustawieniu konta root'a zabieram się za stworzenie konta użytkownika. W tej części konfiguracji zaznaczam checkbox'a dotyczącego dodania konta admin do grupy wheel. Umożliwi mi to wykonywanie komendy sudo (Super User DO).
+\fg{contents/OS_installation/Fedora40/12.png}{Stworzenie użytkownia – admin}{Stworzenie użytkownia}
+
+Po wykonaniu powyższych kroków nie pozostaje nic innego jak rozpoczęcie instalacji.
+\fg{contents/OS_installation/Fedora40/13.png}{Ekran postępującej instalacji}{Ekran postępującej instalacji}
+\newpage
+
+Po jakimś czasie mogę uruchomić ponownie serwer kończąc tym samym instalację systemu.
+\fg{contents/OS_installation/Fedora40/14.png}{Ekran postępującej instalacji – koniec instalacji}{Ekran przed restartem do systemu.}
+
+Po Uruchomieniu ponownym mogę zalogować się na konto root'a i zacząć konfigurację wstępną serwera.
+\fg{contents/OS_installation/Fedora40/15.png}{Zainstalowany system – przed wstępną konfiguracją}{Zainstalowany system Fedora 40}
+\newpage
+
+\subsubsection{Wstępna konfiguracja}
+% \fg{contents/OS_installation/Fedora40/16.png}{1}{2}
+Po zainstalowaniu systemu, następnym krokiem powinno być zaktualizowanie pakietów aby zapewnić najnowszą funkcjonalność oraz poprawki bezpieczeństwa. Jednakże przed tym krokiem decyduję się na konfigurację menadżera pakietów dnf, aby przyśpieszyć pobieranie pakietów. Do pliku /etc/dnf/dnf.conf dodaje następujące wpisy:
+
+\begin{Verbatim}[frame=single]
+#Zmiany wprowadzone recznie
+max_parallel_downloads=7
+fastestmirror=1
+deltarpm=0
+\end{Verbatim}
+
+Wytłumaczenie opcji: \\
+
+\begin{itemize}
+\item max\_parallel\_downloads=7
+Opcja ta pozwala menadżerowi pakietów na pobieranie do 7 pakietów na raz.
+\item fastestmirror=1
+Opcja ta wymusza wyszukiwanie najszybszego serwera zwierciadlanego.
+\item deltarpm=0
+\end{itemize}
+
+\fg{contents/OS_installation/Fedora40/17.png}{Dodanie wpisów do /etc/dnf/dnf.conf aby przyśpieszyć działanie menadżera pakietów dnf}{konfiguracja dnf}
+% Ostateczny wygląd pliku /etc/dnf/dnf.conf
+% \begin{Verbatim}[frame=single]
+% # see `man dnf.conf` for defaults and possible options
+
+% [main]
+% gpgcheck=True
+% installonly_limit=3
+% clean_requirements_on_remove=True
+% best=False
+% skip_if_unavailable=True
+
+% #Zmiany wprowadzone recznie
+% max_parallel_downloads=7
+% fastestmirror=1
+% deltarpm=0
+% \end{Verbatim}
+\newpage
+Teraz po skonfigurowaniu menadżera pakietów można wykonać aktualizację pakietów.
+\fg{contents/OS_installation/Fedora40/18.png}{Aktualizacja pakietów systemowych – test konfiguracji dnf}{Aktualizacja pakietów}
+% \fg{contents/OS_installation/Fedora40/19.png}{1}{2}
+% \fg{contents/OS_installation/Fedora40/20.png}{1}{2}
+
+
+Po aktualizacji pakietów postanowiłem edytować irytującą mnie rzecz tj. uruchamianie się gruba przy jednym systemie opereracyjnym.
+Na poniższym zdjęciu jest plik /etc/default/grub oryginalny (przed modyfikacją)
+\fg{contents/OS_installation/Fedora40/21.png}{plik /etc/default/grub przed zmianą}{plik /etc/default/grub przed zmianą}
+\newpage
+W kolejnym kroku zmieniłem GRUB\_TIMEOUT=5 na GRUB\_TIMEOUT=0
+Co można zauważyć poniższym zdjęciu.
+\fg{contents/OS_installation/Fedora40/22.png}{plik /etc/default/grub po zmianie.}{plik /etc/default/grub po zmianie}
+% \fg{contents/OS_installation/Fedora40/23.png}{1}{2}
+
+
+Aby zatwierdzić zmiany należy użyć komendy: 
+\begin{Verbatim}[frame=single]
+grub2-mkconfig -o /boot/grub2/grub2.cfg
+\end{Verbatim}
+\fg{contents/OS_installation/Fedora40/24.png}{Zastosowanie zmian po edycji grub}{Zastosowanie zmian po edycji grub}
+\newpage
+W następnym kroku postanowiłem ułatwić wpisywanie hasła, gdy korzystam z sudo.
+\fg{contents/OS_installation/Fedora40/25.png}{Zwiększenie wygody wpisywania haseł – edycja pliku komendą sudo visudo}{Zwiększenie wygody wpisywania haseł}
+
+
+Efekt powyższego kroku: 
+\fg{contents/OS_installation/Fedora40/26.png}{Zwiększenie wygody wpisywania haseł – efekt działania po zmianach}{Efekt działania zmiany ustawień}
+% \fg{contents/configuration/SSH/2.png}{podlaczenie poprzez putty}
+% \fg{contents/configuration/SSH/1.png}{ssh}
+\newpage
+% \fg{contents/configuration/SSH/2.png}{podlaczenie poprzez putty}
 \section{Testy działania wdrożonych usług}
 EEEEEEEEEEE
 \section{Kod skryptu BASH, oraz tablica crontab}
