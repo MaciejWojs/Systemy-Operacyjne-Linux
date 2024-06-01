@@ -16,7 +16,11 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
-
+      
+      - name: Install ghostscript
+        run: sudo apt-get install -y ghostscript
+      - name: Compress PDF
+        run: gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dNOPAUSE -dQUIET -dBATCH -dPrinted=false -sOutputFile="main-compressed.pdf" "main.pdf"
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -35,6 +39,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: ./main.pdf
-          asset_name: main.pdf
-          asset_content_type: pdf
+          asset_path: 
+            ./main.pdf
+            ./main-compressed.pdf
+          asset_name: 
+            main.pdf
+            main-compressed.pdf
+          asset_content_type: 
+            pdf
