@@ -16,6 +16,7 @@
 \usepackage{fvextra}
 \usepackage{framed}
 \usepackage{xcolor}
+\usepackage{microtype}
 %BinaryBuilders 
 
 \DefineVerbatimEnvironment{VerbatimBorder}{Verbatim}
@@ -309,7 +310,7 @@ Opcja ta wymusza wyszukiwanie najszybszego serwera zwierciadlanego.
 \item deltarpm=0
 \end{itemize}
 
-\fg{contents/OS_installation/Fedora40/17.png}{Dodanie wpisów do /etc/dnf/dnf.conf aby przyśpieszyć działanie menadżera pakietów dnf}{konfiguracja dnf}
+\fg{contents/OS_installation/Fedora40/17.png}{Dodanie wpisów do /etc/dnf/dnf.conf aby przyśpieszyć działanie menadżera pakietów dnf}{Konfiguracja dnf}
 % Ostateczny wygląd pliku /etc/dnf/dnf.conf
 % \begin{Verbatim}[frame=single]
 % # see `man dnf.conf` for defaults and possible options
@@ -359,7 +360,7 @@ Efekt powyższego kroku:
 
 \subsection{Konfiguracja SSH}
 Aby umożliwić połączenie z SSH na serwerze (VirtualBox) w pierszej kolejności potrzebe jest ustawienie poprawnego adresu IP z sieci lokalnej dla karty ustawionej na sieć mostkowaną (w moim przypadku jest to enp0s8)
-\fg{contents/configuration/SSH/1.png}{ssh}{ssh}
+\fg{contents/configuration/SSH/1.png}{konfiguracja karty sieciowej}{konfiguracja karty sieciowej}
 
 
 W serwerze Fedora 40 SSH jest domyślnie włączone i skonfigurowane. Wystarczy tylko się połączyć
@@ -376,12 +377,22 @@ Wynik powyższego kroku:
 
 \subsection{Nazwa serwera – hostname}
 Aby zmienić nazwę serwera (hostname) można użyć komendy: 
+\vspace*{-5pt}
 \begin{Verbatim}[frame=single]
 hostnamectl set-hostname nazwa-komputera
 \end{Verbatim}
+\vspace*{-5pt}
 \fg{contents/configuration/hostname/1.png}{Zmiana nazwy serwera}{Zmiana nazwy serwera}
 
+\vspace*{-25pt}
 \subsection{DNS – instalacja i konfiguracja}
+Pierwszym krokiem w konfiguracji DNS jest dodanie odpowiedniego wpisu do /etc/hosts. W moim przypadku jest to:
+\begin{Verbatim}[frame=single]
+192.168.230.1 svr06-BinaryBuilders svr06-BinaryBuilders.ns
+\end{Verbatim}
+\fg{contents/configuration/DNS/1.png}{Edycja /etc/hosts}{Edycja /etc/hosts}
+
+\newpage
 Aby zainstalować oprogramowanie do stworzenia serwera DNS należy wydać polecenie:
 
 \begin{itemize}
@@ -416,7 +427,7 @@ Można zrobić to komendą:
 \begin{Verbatim}
 sudo nano /etc/named.conf
 \end{Verbatim} 
-\fg{contents/configuration/DNS/2.png}{Instalacja DNS}{Instalacja DNS}
+\fg{contents/configuration/DNS/2.png}{Stworzenie kopii zapasowej pilku konfiguracyjnego DNS}{Kopia zapasowa pilku konfiguracyjnego DNS}
 \newpage
 \VerbatimInput[fontsize=\small]{contents/configuration/DNS/file_configs/1.txt}
 Powyżej znajduje się zawatość pliku /etc/named.conf, którą należy wprowadzić.
@@ -434,14 +445,14 @@ W kolejnym kroku trzeba utworzyć plik strefy dla przeszukiwania wstecznego. W m
 % \newpage
 Następnym krokiem jest uruchomienie kilku komned:
 \begin{Verbatim}[frame=single]
-      systemctl start named 
-      systemctl enable named
-      firewall-cmd --add-service=dns --permanent 
-      firewall-cmd --reload
-      nmcli con mod enp0s9 ipv4.dns 192.168.230.1
-      nmcli con down enp0s9 && nmcli con up enp0s9
-      rndc reload 
-      rndc status
+systemctl start named 
+systemctl enable named
+firewall-cmd --add-service=dns --permanent 
+firewall-cmd --reload
+nmcli con mod enp0s9 ipv4.dns 192.168.230.1
+nmcli con down enp0s9 && nmcli con up enp0s9
+rndc reload 
+rndc status
 \end{Verbatim}
 
 Wytłumaczenie powyższych poleceń:
@@ -476,13 +487,71 @@ wyświetla status serwera serwera DNS.
 
 Jak widać na zrzucie ekranu powyżej miałem problemy z błędną konfiguracją jednego z pliku, jednakże udało mi się naprawić problem i uruchomić usługę DNS.
 Kolejnym i ostatnim krokiem jest test usługi DNS. Wykonać go można korzystając z drugiej maszyny wirtualnej. Przykładowy test DNS możesz zobaczyć
-\hyperref[fig:dns-test]{tutaj.}
+\hyperref[fig:dns-test]{\textbf{tutaj}.}
+
+\vspace*{-5pt}
+\subsection{DHCP – instalacja i konfiguracja}
+Aby zainstalować oprogramowanie do stworzenia serwera DHCP należy wydać polecenie:
+
+\vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+sudo dnf install -y dhcp-server
+\end{Verbatim}
+\vspace*{-5pt}
+\fg{contents/configuration/DHCP/1.png}{Instalacja DHCP}{Instalacja DHCP}
+Po zainstalowaniu odpowiednich pakietów dobrze jest wykonać kopię zapasową oryginalnego pliku konfiguracji, co widać na zrucie powyżej. Można to zrobić następującą komendą:
+\begin{Verbatim}[frame=single]
+cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.org
+\end{Verbatim}
+\newpage
+W następnym kroku należy wprowadzić zmiany w pliku konfiguracyjnym DHCP tj. /etc/dhcp/dhcpd.conf. W moim przypadku: 
+\VerbatimInput{contents/configuration/DHCP/file_configs/1.txt}
+
+Wprowadzoną treść widać na zrzucie poniżej. 
+\fg{contents/configuration/DHCP/2.png}{Konfiguracja DHCP – edycja pliku /etc/dhcp/dhcpd.conf}{Konfiguracja DHCP}
+
+\newpage
+Następnym krokiem jest wprowadzenie kilku poleceń: 
+\begin{Verbatim}[frame=single]
+systemctl start dhcpd
+systemctl enable dhcpd
+firewall-cmd --add-service=dhcp --permanent
+firewall-cmd --reload
+\end{Verbatim}
+
+Wytłumaczenie powyższych poleceń:
+\begin{itemize}
+\item systemctl start dhcpd
+
+Komenda ta uruchomi usługę DHCP
+\item systemctl enable dhcpd
+ 
+Polecenie to spowoduje że usługa DHCP będzie uruchamiana automatycznie przy włączeniu serwera 
+\item irewall-cmd --add-service=dhcp --permanent
+
+Dodaje regułę zapory sieciowej, aby na stałe zezwalać na ruch DHCP.
+\item firewall-cmd --reload
+
+Przeładowuje ustawienia zapory sieciowej, aby zastosować wprowadzone zmiany.
+\end{itemize}
+Zrzut ekranu pooniżej przedstawia wykonanie tych komend.
+\fg{contents/configuration/DHCP/3.png}{Instalacja DHCP}{Instalacja DHCP}
+
+Po powyższym kroku nie pozostaje nic innego jak przetestować działanie DHCP. Wyniki testu dostępne są \hyperref[fig:dhcp-test]{\textbf{tutaj}.}
+\newpage
+
+
 \section{Testy działania wdrożonych usług}
 \subsection{DNS}
 \fgc{contents/configuration/DNS/8.png}{Test DNS}{Test DNS}{dns-test}
-żżżżEEEEEEEEEEE
+Jak widać na powyższym zdjęciu system w sieci wewnętrznej dostaje odpowiedzi od serwera na zapytania, co sugeruje że uługa DNS została skonfigurowana poprawnie. 
+\subsection{DHCP}
+\fgc{contents/configuration/DHCP/4.png}{Instalacja DHCP}{Instalacja DHCP}{dhcp-test}
+Jak widać na powyższym zdjęciu karta w systemie klienta ustawiona na sieć wewnętrzną dostała poprawny adres IP, adres bramy domyślnej i DNS. Na zdjęciu również widać że pula DHCP działa poprawnie. 
+\newpage
+
 \section{Kod skryptu BASH, oraz tablica crontab}
-FFFFFFFFFFFFFFF
+FFFFFFFFFFFFFFFn
 \section{Wnioski}
 EEEEEEEEEEEEEE
 \newpage
