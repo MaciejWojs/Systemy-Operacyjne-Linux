@@ -39,11 +39,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} 
-          asset_path: 
-            ./main.pdf
-            ./main-compressed.pdf
-          asset_name: 
-            main.pdf
-            main-compressed.pdf
-          asset_content_type: 
-            pdf
+          asset_path: ./main.pdf
+          asset_name: main.pdf
+          asset_content_type: pdf
+      - name: Upload Release Asset Compressed
+        id: upload-release-asset-compressed 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./main-compressed.pdf
+          asset_name: main-compressed.pdf
+          asset_content_type: pdf
