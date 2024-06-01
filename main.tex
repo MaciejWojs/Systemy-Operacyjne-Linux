@@ -587,10 +587,88 @@ Formatowanie przed chwilą stworzonych partycji (w systemie plików ext4), stwor
 Następnym krokiem jest zapewnienie automatycznego montowania utworzonych partycji. Aby to osiągnąć należy zmodyfikować /etc/fstab, ale najpierw wato wykonać kopię, gdyż jest to kluczowy składnik sysyemu. W razie awarii tego pliku nawet cały system może się nie uruchomić. Postanowiłem użyć id ponieważ jest niezmienne w przeciwieństwie do nazwy (np. /dev/md0p1 można zmienić). Tak wygląda moja tablica fstab:
 \VerbatimInput{contents/configuration/Raid5/file_configs/fstab.txt}
 \fg{contents/configuration/Raid5/9.png}{Edycja /etc/fstab}{Edycja /etc/fstab}
-
+\vspace*{-5pt}
 Test po ponownym uruchominiu jest dostępny \hyperref[fig:raid5-auto-mount-test]{\textbf{tutaj}.}
 
-% \subsection{Samba – instalacja i konfiguracja}
+\vspace*{-5pt}
+\subsection{Samba – instalacja i konfiguracja}
+\vspace*{-5pt}
+Aby zainstalować oprogramowanie do stworzenia serwera DHCP należy wydać polecenie:
+\vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+      sudo apt install samba-client samba -y
+\end{Verbatim}
+\vspace*{-5pt}
+
+Po zainstalowaniu wymaganego oprogramowania wykonuję kopię zapasową pliku konfiguracyjnego samby. Można to zrobić komendą:
+\vspace*{-5pt}
+% \newpage
+\begin{Verbatim}[frame=single]
+cp /etc/samba/smb.conf /etc/samba/smb.conf.bk
+\end{Verbatim}
+% \fg{contents/configuration/Samba/1.png}{Samba – instalacja}{Samba – instalacja}
+\fg{contents/configuration/Samba/2.png}{Samba – instalacja}{Samba – instalacja}
+\newpage
+
+Po wykonaniu kopii zapasowej można zabrać się za edycję /etc/samba/smb.conf. Tak wyglądda ten plik u mnie: 
+\VerbatimInput{contents/configuration/Samba/file_configs/1.txt}
+\fg{contents/configuration/Samba/3.png}{Edycja pliku /etc/samba/smb.conf}{Edycja pliku /etc/samba/smb.conf}
+
+\newpage
+Następnym krokiem jest wprowadzenie kilku poleceń: 
+\begin{Verbatim}[frame=single]
+testparam
+systemctl start smb nmb
+systemctl enable smb nmb
+firewall-cmd --add-service=samba --permanent
+firewall-cmd --reload
+setsbool -P samba_export_all_rw on
+\end{Verbatim}
+
+Wytłumaczenie powyższych poleceń:
+\begin{itemize}
+      \item testparm
+      
+      Testuje i wyświetla aktualne ustawienia konfiguracji Samby. Używane jest do sprawdzenia pliku konfiguracyjnego Samba (smb.conf) pod kątem błędów i wyświetlenia aktywnych ustawień.
+      
+      \item systemctl start smb nmb
+      
+      Uruchamia usługi smb (serwer SMB) i nmb (serwer NetBIOS). Jest to wymagane, aby Samba mogła działać poprawnie i udostępniać zasoby w sieci.
+      
+      \item systemctl enable smb nmb
+      
+      Ustawia usługi smb i nmb do automatycznego uruchamiania przy starcie systemu. Dzięki temu nie trzeba ich ręcznie uruchamiać po każdym restarcie serwera.
+      
+      \item firewall-cmd --add-service=samba --permanent
+      
+      Dodaje regułę zapory sieciowej, aby na stałe zezwalać na ruch Samba. Umożliwia to komunikację Samby przez zaporę sieciową.
+      
+      \item firewall-cmd --reload
+      
+      Przeładowuje ustawienia zapory sieciowej, aby zastosować wprowadzone zmiany. Jest to konieczne po dodaniu nowych reguł do zapory.
+      
+      \item setsebool -P samba\_export\_all\_rw on
+      
+      Ustawia w SELinux politykę, która pozwala Sambie na eksportowanie wszystkich udziałów z prawami do odczytu i zapisu. Dzięki temu Samba może zarządzać plikami z pełnym dostępem zgodnie z ustawieniami SELinux.
+\end{itemize}
+Na następnej stronie znajduje się zrzut ekranu z wykonaniem tych komend.
+\newpage 
+      
+      
+      
+\fg{contents/configuration/Samba/4.png}{Samba – ustawienia SELinux oraz firewall}{Samba – ustawienia SELinux oraz firewall}
+
+Aby udział był dostępny pod addresem \textbackslash \textbackslash sfs.firma.ns\textbackslash dysk porzebna była zmiana konfiguracji DNS. Wymagane było dodanie linijki w pliku /var/named/BinaryBuilders.ns.lan\_in: 
+\begin{Verbatim}[frame=single]
+sfs IN A 192.168.230.1
+\end{Verbatim}
+\fg{contents/configuration/Samba/5 - edycja BinaryBuilders.ns.lan_in.png}{Edycja konfiguracji DNS}{Edycja konfiguracji DNS}
+
+Po restarcie usługi named nie pozostaje nic innego jak sprawdzenie czy podłączenie do udziału działa. Test jest dostępny \hyperref[fig:samba-try-connection]{\textbf{tutaj}.}
+
+% \fg{contents/configuration/Samba/6.png}{}{}
+
+
 % \subsection{HTTP – instalacja i konfiguracja}
 % \subsection{phpMyAdmin – instalacja i konfiguracja}
 % \subsection{UserDir na serwerze HTTP – instalacja i konfiguracja}
@@ -618,8 +696,13 @@ Jak widać na powyższym zdjęciu karta w systemie klienta ustawiona na sieć we
 \fgc{contents/configuration/Raid5/10.png}{Test automatycznego montowania partycji po ponownym uruchomieniu serwera}{Test automatycznego montowania}{raid5-auto-mount-test}
 Jak widać na powyższym zrzucie ekranu po restarcie serwera partycje są montowane poprawnie. 
 
+\subsection{Samba}
+\fgc{contents/configuration/Samba/7.png}{Samba – próba podłączenia się do udziału na serwerze}{Samba – próba podłączenia się do udziału na serwerze}{samba-try-connection}
+Aby podłączyć się z serwerem Samby należy otworzyć menadżer plików następnie otworzyć zakładkę Plik w lewym górnym rogu, następnie połącz z serwerem, kolejno w typie należy wybrać Udział Windows, ostatecznie należy wypełnić wymagane dane. Przykładowa próba podłączenia powyżej, a efekt tego działania poniżej.
+\fgc{contents/configuration/Samba/8.png}{Samba – wynik poprzedniego kroku}{Samba – wynik poprzedniego kroku}{samba-connected}
 
 
+\newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
 \section{Wnioski}
