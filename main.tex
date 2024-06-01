@@ -538,17 +538,87 @@ Zrzut ekranu pooniżej przedstawia wykonanie tych komend.
 \fg{contents/configuration/DHCP/3.png}{Instalacja DHCP}{Instalacja DHCP}
 
 Po powyższym kroku nie pozostaje nic innego jak przetestować działanie DHCP. Wyniki testu dostępne są \hyperref[fig:dhcp-test]{\textbf{tutaj}.}
+
+\newpage
+\subsection{RAID 5 – konfiguracja}
+Aby skonfigurować RAID 5 z 3 dysków głównych i jednym dyskiem zapasoym o wypadkowej pojemności 10GB, trzeba dodać 4 dyski o pojemności 5GB. 
+\fg{contents/configuration/Raid5/1.png}{Dodanie dysków w VirtualBox}{Dodanie dysków w VirtualBox}
+
+Po dodaniu dysków w VirtualBox należy uruchomić serwer. Po uruchomieniu serwera sprawdzam czy dyski są widoczne przez system operacyjny. Można to sprawdzić wykonując komendę:
+\begin{Verbatim}[frame=single]
+lsblk
+\end{Verbatim}
+
+Następnie tworzę macierz następującymi komendami: 
+\begin{Verbatim}[frame=single,fontsize=\small, breaklines=true]
+mdadm --create --verbose /dev/md0 --level=5 --raid-devices=3 /dev/sd[b-d] --spare-devices=1 /dev/sde
+mdadm -D /dev/md0
+\end{Verbatim}
+Wytłumaczenie komend powyżej:
+\begin{itemize}
+      \item mdadm --create --verbose /dev/md0 --level=5 --raid-devices=3 /dev/sd[b-d] --spare-devices=1 /dev/sde
+      
+      Komenda ta tworzy macierz RAID 5 o nazwie /dev/md0 z trzech urządzeń (tutaj /dev/sdb, /dev/sdc, i /dev/sdd) i jednym urządzeniem zapasowym (/dev/sde). Parametr --verbose sprawia, że proces tworzenia macierzy będzie wyświetlał szczegółowe informacje na temat wykonywanych operacji.
+      
+      \item mdadm -D /dev/md0
+      
+      Polecenie to wyświetla szczegółowe informacje o istniejącej macierzy RAID /dev/md0. Pokazuje takie dane jak status macierzy, urządzenia składowe, poziom RAID i wiele innych.
+      \end{itemize}
+Na następnej stronie znajduje się zrzut ekranu prezentujący działanie tych poleneń.
+\newpage
+\fg{contents/configuration/Raid5/2.png}{Stworzenie macierzy raid 5}{Stworzenie macierzy raid 5}
+
+% \fg{contents/configuration/Raid5/3.png}{Instalacja DHCP}{Instalacja DHCP}
+Następnym krokiem jest wybranie schematu partycjonowania. Ja zostawiłem domyślny wybór – GPT
+\fg{contents/configuration/Raid5/4.png}{Partycjonowanie macierzy narzędziem cfdisk}{Partycjonowanie macierzy narzędziem cfdisk}
+
+\newpage
+Kolejnym krokiem jest utworzenie dwóch partycji na macierzy, którą wcześniej stworzyłem.
+\fg{contents/configuration/Raid5/5.png}{Stworzenie dwóch partycji – każda 5GB}{Stworzenie dwóch partycji}
+
+Potwierdzenie działania poprzedniej komendy: 
+\fg{contents/configuration/Raid5/6.png}{Wynik partycjonowania}{Wynik partycjonowania}
+
+\newpage
+Formatowanie przed chwilą stworzonych partycji (w systemie plików ext4), stworzenie katalogów /dysksieciowy, /kopie, zamontowanie partycji do tych katalogów oraz wyświetlenie id dysków i partycji w systtemie.
+\fg{contents/configuration/Raid5/7.png}{Przygotowanie ścieżek do montowania}{Przygotowanie ścieżek do montowania}
+% \fg{contents/configuration/Raid5/8.png}{Instalacja DHCP}{Instalacja DHCP}
+
+Następnym krokiem jest zapewnienie automatycznego montowania utworzonych partycji. Aby to osiągnąć należy zmodyfikować /etc/fstab, ale najpierw wato wykonać kopię, gdyż jest to kluczowy składnik sysyemu. W razie awarii tego pliku nawet cały system może się nie uruchomić. Postanowiłem użyć id ponieważ jest niezmienne w przeciwieństwie do nazwy (np. /dev/md0p1 można zmienić). Tak wygląda moja tablica fstab:
+\VerbatimInput{contents/configuration/Raid5/file_configs/fstab.txt}
+\fg{contents/configuration/Raid5/9.png}{Edycja /etc/fstab}{Edycja /etc/fstab}
+
+Test po ponownym uruchominiu jest dostępny \hyperref[fig:raid5-auto-mount-test]{\textbf{tutaj}.}
+
+% \subsection{Samba – instalacja i konfiguracja}
+% \subsection{HTTP – instalacja i konfiguracja}
+% \subsection{phpMyAdmin – instalacja i konfiguracja}
+% \subsection{UserDir na serwerze HTTP – instalacja i konfiguracja}
+% \subsection{wordpress – instalacja i konfiguracja}
+% \subsection{proxy – instalacja i konfiguracja}
+% \subsection{SMTP – instalacja i konfiguracja}
+% \subsection{POP-IMAP – instalacja i konfiguracja}
+% \subsection{Skrypt i crontab – konfiguracja}
 \newpage
 
 
 \section{Testy działania wdrożonych usług}
 \subsection{DNS}
+\vspace*{-10pt}
 \fgc{contents/configuration/DNS/8.png}{Test DNS}{Test DNS}{dns-test}
 Jak widać na powyższym zdjęciu system w sieci wewnętrznej dostaje odpowiedzi od serwera na zapytania, co sugeruje że uługa DNS została skonfigurowana poprawnie. 
+\vspace*{-10pt}
 \subsection{DHCP}
+\vspace*{-10pt}
 \fgc{contents/configuration/DHCP/4.png}{Instalacja DHCP}{Instalacja DHCP}{dhcp-test}
+\vspace*{-5pt}
 Jak widać na powyższym zdjęciu karta w systemie klienta ustawiona na sieć wewnętrzną dostała poprawny adres IP, adres bramy domyślnej i DNS. Na zdjęciu również widać że pula DHCP działa poprawnie. 
 \newpage
+\subsection{Raid 5}
+\fgc{contents/configuration/Raid5/10.png}{Test automatycznego montowania partycji po ponownym uruchomieniu serwera}{Test automatycznego montowania}{raid5-auto-mount-test}
+Jak widać na powyższym zrzucie ekranu po restarcie serwera partycje są montowane poprawnie. 
+
+
 
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
