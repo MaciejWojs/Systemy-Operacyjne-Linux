@@ -710,7 +710,7 @@ Test działania web serwera dostępny jest \hyperref[fig:http-test]{\textbf{tuta
 
 \newpage
 \subsection{PHP – instalacja i konfiguracja}
-Aby zainstalowac PHP należy wydać polecenie:
+Aby zainstalować PHP należy wydać polecenie:
 \begin{Verbatim}[frame=single]
 sudo dnf install php php-mbstring php-pear -y
 \end{Verbatim}
@@ -718,9 +718,29 @@ sudo dnf install php php-mbstring php-pear -y
 
 Po zainstalowaniu wymaganych pakietów tworzę prostą stronę internetową wykorzystującą PHP.
 \fg{contents/configuration/PHP/2.png}{PHP – stworzenie strony internetowej}{PHP – stworzenie strony internetowej}
+
 Test działania strony dostępny jest \hyperref[fig:php-test]{\textbf{tutaj}.}
-% \newpage
-% \subsection{phpMyAdmin – instalacja i konfiguracja}
+
+\newpage
+\subsection{mariadb – instalacja i konfiguracja}
+Aby zainstalować silnik bazydanych mariadb należy wydać polecenie:
+\begin{Verbatim}[frame=single]
+sudo dnf install mariadb-server -y
+\end{Verbatim}
+\fg{contents/configuration/mariadb/1.png}{mariadb – instalcja usługi}{mariadb – instalcja usługi}
+
+Do pliku /etc/my.cnf.d/mariadb-server.cnf w sekcji [mysqld] dodałem linię: 
+\begin{Verbatim}[frame=single]
+character-set-server=utf8      
+\end{Verbatim}
+\fg{contents/configuration/mariadb/2.png}{mariadb – edycja pliku konfiguracyjnego}{mariadb – edycja pliku konfiguracyjnego}
+
+\newpage
+Restart usługi mariadb oraz instalacja serwera MySQL.
+\fg{contents/configuration/mariadb/3.png}{MySQL – instalacja część pierwsza}{MySQL – instalacja część pierwsza}
+\fg{contents/configuration/mariadb/4.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
+Test podłączenia do serwera MySQL dostępny jest \hyperref[fig:mysql-test]{\textbf{tutaj}.}
 % \subsection{phpMyAdmin – instalacja i konfiguracja}
 % \subsection{phpMyAdmin – instalacja i konfiguracja}
 % \subsection{UserDir na serwerze HTTP – instalacja i konfiguracja}
@@ -762,6 +782,9 @@ Jak widać na zdjęiu powyżej web serwer działa poprawnie.
 \fgc{contents/configuration/PHP/3.png}{Strona html + PHP}{Strona html + PHP}{php-test}
 Jak można zauważyć strona wykorzystującą PHP działa poprawnie, nie wyskoczył żaden błąd dotyczący błednej konfiguracji PHP, czy błędneego użycia go na stronie.
 
+\subsection{MySQL}
+\fgc{contents/configuration/mariadb/5.png}{Test usługi mariadb (MySQL)}{Test usługi mariadb (MySQL)}{mysql-test}
+Jak widać podłączenie zz bazą danych działa. Następnym i ostatnim krokiem jest dodanie usługi MySQL do dozwolonych usług w zaporze ogniowej. 
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
