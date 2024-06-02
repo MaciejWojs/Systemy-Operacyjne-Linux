@@ -945,8 +945,106 @@ Przykład użycia tekstowego klienta poczty na serwerze:
 
 Test działania poczty dostępny jest \hyperref[fig:poczta-test]{\textbf{tutaj}.}
 
-% \subsection{Dodatkowa usługa git – instalacja i konfiguracja}
+\subsection{Dodatkowa usługa git (jako serwer) – instalacja i konfiguracja}
+Aby zainstalować git na serwerze należy wydać polecenie: 
+\begin{Verbatim}[frame=single]
+sudo dnf install git -y
+\end{Verbatim}
 
+W następnym kroku trzeba wykonać następujące komendy:
+\begin{Verbatim}[frame=single]
+su - git
+mkdir ~/.ssh
+chmod 700 ~/.ssh
+touch ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+mkdir repozytoria
+cd repozytoria/
+mkdir BinaryBuilders.git
+cd BinaryBuilders.git
+repozytoria/BinaryBuilders.git$ git init --bare
+systemctl restart ssh
+\end{Verbatim}
+
+\newpage
+Wytłumaczenie tych komend:
+\begin{itemize}
+      
+      \item su - git
+      
+      Komenda ta oznacza "przełącz użytkownika" (su) na użytkownika o nazwie git. Flaga - oznacza, że chcemy przełączyć się na użytkownika git z ustawieniami jego środowiska.
+      
+      \item mkdir ~/.ssh
+      
+      Tworzy nowy katalog o nazwie .ssh w katalogu domowym użytkownika git. Ten katalog będzie używany do przechowywania kluczy SSH. Następnie chmod 700 ~/.ssh ustawia uprawnienia (prawa dostępu) dla tego katalogu na 700, co oznacza, że tylko właściciel (użytkownik git) ma pełny dostęp do tego katalogu, a inni nie mają dostępu do jego zawartości.
+      
+      \item touch ~/.ssh/authorized\_keys
+      
+      Tworzy pusty plik o nazwie authorized\_keys w katalogu .ssh. Ten plik będzie przechowywał klucze publiczne SSH, które pozwolą na uwierzytelnianie użytkowników. Następnie chmod 600 ~/.ssh/authorized\_keys ustawia uprawnienia dla pliku authorized\_keys na 600, co oznacza, że tylko właściciel ma prawo do odczytu i zapisu do tego pliku, a inni nie mają żadnych uprawnień dostępu.
+      
+      \item mkdir repozytoria
+      
+      Tworzy nowy katalog o nazwie repozytoria. To może być katalog główny, w którym będą przechowywane wszystkie repozytoria Git.
+      
+      \item cd repozytoria/
+      
+      Przechodzi do katalogu repozytoria.
+      
+      \item mkdir BinaryBuilders.git
+      
+      Tworzy nowy katalog o nazwie BinaryBuilders.git. Ta nazwa sugeruje, że to będzie repozytorium Git, ale nazwy z .git na końcu są konwencją dla repozytoriów Git, które są "gołe" lub "bezwarstwowe" (bare), co oznacza, że nie zawierają pracy na kodzie, tylko same dane repozytorium.
+      
+      \item cd BinaryBuilders.git
+      
+      Przechodzi do katalogu BinaryBuilders.git.
+      
+      \item git init --bare
+      
+      Inicjuje nowe repozytorium Git w trybie "bezwarstwowym" (bare), co oznacza, że będzie to repozytorium, które nie będzie zawierać żadnej pracy na kodzie, a jedynie historię repozytorium i dane kontrolne Git.
+      
+      \item systemctl restart ssh
+      
+      Uruchamia ponownie usługę SSH na serwerze. To polecenie może być potrzebne, jeśli dokonano jakichkolwiek zmian w konfiguracji SSH lub kluczach, aby zastosować te zmiany.
+\end{itemize}
+
+\newpage
+W następnym kroku wykonuje następne polecenia na windows (łaczę się z serwerem po karcie enp0s8, gdyż ustawiona ona jest na sieć mostkowaną):
+\begin{Verbatim}[frame=single, breaklines=true]
+ssh-keygen
+scp "C:\Users\Maciej\.ssh\id_rsa.pub" git@192.168.1.100:~/.ssh/authorized_keys
+ssh git@192.168.1.100
+Poniżej komendy do testowania:
+git clone git@192.168.1.100:~/repozytoria/BinaryBuilders.git
+echo abc > test.txt
+git add .; git commit -m "Pierwszy commit"; git push
+\end{Verbatim}
+Wytłumaczenie tych komend:
+\begin{itemize}
+\item scp "C:/Users/Maciej/.ssh/id\_rsa.pub" git@192.168.1.100:\textasciitilde/.ssh/authorized\_keys
+    
+    Polecenie scp kopiuje klucz publiczny (id\_rsa.pub) z lokalnego komputera do katalogu \textasciitilde/.ssh/\\authorized\_keys na serwerze Git. Ten krok umożliwia uwierzytelnianie się na serwerze Git za pomocą klucza SSH.
+    
+    \item ssh git@192.168.1.100
+    
+    To polecenie próbuje nawiązać połączenie SSH z serwerem Git, aby sprawdzić, czy klucz SSH został poprawnie dodany i czy możesz się zalogować na serwerze Git za pomocą klucza SSH.
+    
+    \item git clone git@192.168.1.100:\textasciitilde/repozytoria/BinaryBuilders.git
+    
+    Klonuje repozytorium Git znajdujące się na serwerze Git pod wskazaną ścieżką \textasciitilde/repozytoria/BinaryBuilders.git.
+    
+    \item cd ./BinaryBuilders
+    
+    Przechodzi do katalogu BinaryBuilders, gdzie znajduje się lokalne repozytorium Git.
+    
+    \item echo abc > test.txt
+    
+    Tworzy nowy plik tekstowy o nazwie test.txt i umieszcza w nim jedną linię tekstu zawierającą słowo "abc".
+\end{itemize}
+
+\newpage
+Efekt działań opisanych powyżej
+\fg{contents/configuration/git/2.png}{git – konfiguracja}{git – konfiguracja}
+Wynik git można znaleźć \hyperref[fig:git-test]{\textbf{tutaj}.}
 
 \section{Testy działania wdrożonych usług}
 \subsection{DNS}
@@ -954,12 +1052,13 @@ Test działania poczty dostępny jest \hyperref[fig:poczta-test]{\textbf{tutaj}.
 \fgc{contents/configuration/DNS/8.png}{Test DNS}{Test DNS}{dns-test}
 Jak widać na powyższym zdjęciu system w sieci wewnętrznej dostaje odpowiedzi od serwera na zapytania, co sugeruje że uługa DNS została skonfigurowana poprawnie. 
 \vspace*{-10pt}
+\newpage
 \subsection{DHCP}
 \vspace*{-10pt}
 \fgc{contents/configuration/DHCP/4.png}{Instalacja DHCP}{Instalacja DHCP}{dhcp-test}
 % \vspace*{-5pt}
 Jak widać na powyższym zdjęciu karta w systemie klienta ustawiona na sieć wewnętrzną dostała poprawny adres IP, adres bramy domyślnej i DNS. Na zdjęciu również widać że pula DHCP działa poprawnie. 
-\newpage
+% \newpage
 \subsection{Raid 5}
 \fgc{contents/configuration/Raid5/10.png}{Test automatycznego montowania partycji po ponownym uruchomieniu serwera}{Test automatycznego montowania}{raid5-auto-mount-test}
 Jak widać na powyższym zrzucie ekranu po restarcie serwera partycje są montowane poprawnie. 
@@ -970,15 +1069,15 @@ Jak widać na powyższym zrzucie ekranu po restarcie serwera partycje są montow
 Aby podłączyć się z serwerem Samby należy otworzyć menadżer plików następnie otworzyć zakładkę Plik w lewym górnym rogu, następnie połącz z serwerem, kolejno w typie należy wybrać Udział Windows, ostatecznie należy wypełnić wymagane dane. Przykładowa próba podłączenia powyżej, a efekt tego działania poniżej.
 \fgc{contents/configuration/Samba/8.png}{Samba – wynik poprzedniego kroku}{Samba – wynik poprzedniego kroku}{samba-connected}
 
+\newpage
 \subsection{HTTP}
 \fgc{contents/configuration/HTTP/9.png}{Test działania serwera WWW}{Test działania serwera WWW}{http-test}
 Jak widać na zdjęiu powyżej web serwer działa poprawnie. 
-\newpage
 
 \subsection{PHP}
 \fgc{contents/configuration/PHP/3.png}{Strona html + PHP}{Strona html + PHP}{php-test}
 Jak można zauważyć strona wykorzystującą PHP działa poprawnie, nie wyskoczył żaden błąd dotyczący błednej konfiguracji PHP, czy błędneego użycia go na stronie.
-
+% \newpage
 \subsection{MySQL}
 \fgc{contents/configuration/mariadb/5.png}{Test usługi mariadb (MySQL)}{Test usługi mariadb (MySQL)}{mysql-test}
 Jak widać podłączenie zz bazą danych działa. Następnym i ostatnim krokiem jest dodanie usługi MySQL do dozwolonych usług w zaporze ogniowej. 
@@ -1023,8 +1122,19 @@ no_proxy="localhost,127.0.0.1,::1"
 
 \subsection{Poczta}
 \fgc{contents/configuration/POP-IMAP/16.png}{Wysłanie maila na serwerze}{Wysłanie maila na serwerze}{poczta-test}
+Na zrzucie powyżej przedstawiony jest przykład jak korzystać z klienta tekstowego poczty na serwerze. 
+\fg{contents/configuration/POP-IMAP/17.png}{Thunderbird - konfiguracja}{Thunderbird - konfiguracja}
 
+Konfiguracja programu Thunderbird – klienta poczty. 
+\fg{contents/configuration/POP-IMAP/18.png}{Wysłanie maila na serwerze}{Wysłanie maila na serwerze}
 
+\newpage
+Na zdjęciu powyżej przedstawione jest ostrzerzenie dotyczące bezpieczeństwa – konfiguracja serwra nie obsługuje szyfrowania.  
+\subsection{Git}
+\fgc{contents/configuration/git/3.png}{git – konfiguracja}{git – konfiguracja}{git-test}
+Na zrzucie ekranu przedstawione jest klonowanie repozytorium, tworzenie commita oraz wypchnięcie kodu na serwer.
+
+\newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
 \section{Wnioski}
