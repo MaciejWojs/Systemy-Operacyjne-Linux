@@ -335,7 +335,7 @@ Teraz po skonfigurowaniu menadżera pakietów można wykonać aktualizację paki
 % \fg{contents/OS_installation/Fedora40/20.png}{1}{2}
 
 
-Po aktualizacji pakietów postanowiłem edytować irytującą mnie rzecz tj. uruchamianie się gruba przy jednym systemie opereracyjnym.
+Po aktualizacji pakietów postanowiłem edytować irytującą mnie rzecz tj. uruchamianie się gruba przy jednym systemie operacyjnym.
 Na poniższym zdjęciu jest plik /etc/default/grub oryginalny (przed modyfikacją)
 \fg{contents/OS_installation/Fedora40/21.png}{plik /etc/default/grub przed zmianą}{plik /etc/default/grub przed zmianą}
 \newpage
@@ -536,7 +536,7 @@ Dodaje regułę zapory sieciowej, aby na stałe zezwalać na ruch DHCP.
 Przeładowuje ustawienia zapory sieciowej, aby zastosować wprowadzone zmiany.
 \end{itemize}
 Zrzut ekranu pooniżej przedstawia wykonanie tych komend.
-\fg{contents/configuration/DHCP/3.png}{Instalacja DHCP}{Instalacja DHCP}
+\fg{contents/configuration/DHCP/3.png}{DHCP – dodanie do zapory ogniowej}{DHCP – dodanie do zapory ogniowej}
 
 Po powyższym kroku nie pozostaje nic innego jak przetestować działanie DHCP. Wyniki testu dostępne są \hyperref[fig:dhcp-test]{\textbf{tutaj}.}
 
@@ -1136,9 +1136,72 @@ Na zrzucie ekranu przedstawione jest klonowanie repozytorium, tworzenie commita 
 
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
-FFFFFFFFFFFFFFFn
+\subsection{Skrypt}
+
+\subsubsection{Wersja pierwsza}
+Kod pierwszej wersji skryptu
+\fg{contents/configuration/skrypt/4.png}{Kod skryptu – pierwsza wersja}{Kod skryptu – pierwsza wersja}
+
+Wynik działania skryptu
+\fg{contents/configuration/skrypt/6.png}{Dzianie skryptu – pierwsza wersja}{Dzianie skryptu – pierwsza wersja}
+
+\newpage
+\subsubsection{Wersja druga}
+Kod drugiej wersji skryptu
+\fg{contents/configuration/skrypt/8.png}{Kod skryptu – druga wersja}{Kod skryptu – druga wersja}
+
+Jak widać skrypt działa – wysyła maila o pozytywneym wyniku tworzenia kopi zapasowej
+\fg{contents/configuration/skrypt/9.png}{Dzianie skryptu – druga wersja część 1}{Dzianie skryptu – druga wersja część 1}
+
+\newpage
+Kod drugiej wersji skryptu – specjalnie zepsuty, aby pokazać co się stanie w przypadku niepowodzenia kopii.
+\fg{contents/configuration/skrypt/10.png}{Kod skryptu – druga wersja (zepsuty)}{Kod skryptu – druga wersja (zepsuty)}
+
+Jak widać skrypt działa – wysyła maila o negatywnym wyniku tworzenia kopi zapasowej dodatkowo załącza log kopi zapasowej z danego dnia.
+\fg{contents/configuration/skrypt/11.png}{Dzianie skryptu – druga wersja część 2}{Dzianie skryptu – druga wersja część 2}
+
+\newpage
+Plik logów z załącznika wyświetlony na serwerze.
+\fg{contents/configuration/skrypt/12.png}{Dzianie skryptu – druga wersja część 2}{Dzianie skryptu – druga wersja część 2}
+
+\subsubsection{Wyniki działań obu skryptów}
+Jeżeli kopia wykonała się poprawnie daje takie wyniki.
+
+\fg{contents/configuration/skrypt/7.png}{Działanie skryptu jeżeli kopia jest pomyślna}{Działanie skryptu jeżeli kopia jest pomyślna}
+
+\newpage
+\subsection{Crontab}
+Tablica crontab
+\fg{contents/configuration/skrypt/5.png}{Dzianie skryptu jeżeli kopia jest pomyślna}{Dzianie skryptu jeżeli kopia jest pomyślna}
+\VerbatimInput{contents/configuration/skrypt/file_configs/crontab}
+\newpage
 \section{Wnioski}
-EEEEEEEEEEEEEE
+\subsection{Skuteczność i Stabilność Serwera}
+Zrealizowany projekt wykazał, że Fedora Server 40 jest stabilnym i wydajnym systemem operacyjnym, odpowiednim do zastosowań serwerowych. System ten sprawnie obsłużył wszystkie zaplanowane usługi, takie jak DNS, DHCP, Samba, serwer WWW z obsługą PHP, serwer bazodanowy, serwer pocztowy oraz serwer proxy Squid. Zarządzanie serwerem za pomocą SSH oraz emulatora PuTTY okazało się intuicyjne i efektywne, co znacząco ułatwiło administrację.
+
+\subsection{Konfiguracja i Zarządzanie Usługami}
+Poprawna konfiguracja i integracja wielu usług na jednym serwerze jest możliwa i nie sprawia większych trudności, pod warunkiem, że administrator posiada odpowiednie umiejętności i wiedzę. Konfiguracja DNS oraz podział na subdomeny pozwoliły na łatwe zarządzanie różnymi usługami. Usługa DHCP zdefiniowana zgodnie z założeniami zapewniła poprawną adresację w sieci lokalnej.
+
+\subsection{Bezpieczeństwo i Automatyzacja}
+Wdrożenie automatycznej archiwizacji systemu plików \texttt{/home} oraz montowanie macierzy RAID 5 z dyskiem zapasowym zwiększyło bezpieczeństwo danych oraz zapewniło wysoką dostępność i redundancję. Automatyczne montowanie partycji przy starcie systemu oraz zaplanowane zadania \texttt{cron} do archiwizacji danych okazały się nie tylko efektywne, ale również minimalizujące ryzyko utraty danych.
+
+\subsection{Monitorowanie i Kontrola Aktywności}
+Zastosowanie serwera proxy Squid do monitorowania aktywności użytkowników umożliwiło skuteczne kontrolowanie dostępu do Internetu oraz analizowanie ruchu sieciowego. Narzędzia monitorujące pozwoliły na bieżąco śledzić działania pracowników, co jest kluczowe w kontekście bezpieczeństwa i produktywności firmy.
+
+\subsection{Kompleksowe Środowisko Usług}
+Konfiguracja serwera WWW z obsługą PHP, serwera bazodanowego zarządzanego przez phpMyAdmin oraz CMS WordPress stworzyła kompleksowe środowisko do zarządzania treścią i bazami danych. Dodatkowo, wdrożenie serwera pocztowego oraz konfiguracja klienta mail usprawniły komunikację wewnątrz firmy.
+
+\subsection{Wydajność i Skalowalność}
+Rozwiązanie oparte na Fedora Server 40 jest wydajne i skalowalne, co umożliwia łatwe rozszerzanie infrastruktury w przyszłości. Konfiguracja RAID 5 zapewnia optymalne wykorzystanie dostępnych zasobów dyskowych, a podział przestrzeni na partycje pozwala na elastyczne zarządzanie danymi.
+
+\subsection{Dokumentacja i Testy}
+Dokumentacja projektu, w tym schemat logiczny infrastruktury, zrzuty ekranu oraz wyniki testów działania usług, stanowią cenne źródło informacji i dowód na poprawne wdrożenie wszystkich zaplanowanych elementów. Testy wykazały, że wszystkie usługi działają poprawnie, co potwierdza skuteczność przeprowadzonej konfiguracji.
+
+\subsection{Dodatkowe Usługi}
+Wdrożenie dodatkowej usługi, która nie była omawiana podczas zajęć, pozwoliło na poszerzenie zakresu wiedzy i umiejętności praktycznych. To pokazuje, że system jest elastyczny i może być dostosowywany do indywidualnych potrzeb firmy.
+
+\subsection{Wnioski Końcowe}
+Projekt wdrożenia serwera Fedora Server 40 z różnorodnymi usługami okazał się sukcesem, spełniając wszystkie założenia i wymagania techniczne. Poprawna konfiguracja, bezpieczeństwo, wydajność oraz skalowalność systemu potwierdzają, że wybrane technologie i narzędzia są odpowiednie do realizacji zadań serwerowych w firmie.
 \newpage
 \nocite{k8s-docs}
 \nocite{k8s-blog}
