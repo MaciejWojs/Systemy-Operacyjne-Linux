@@ -741,8 +741,30 @@ Restart usługi mariadb oraz instalacja serwera MySQL.
 \fg{contents/configuration/mariadb/4.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
 
 Test podłączenia do serwera MySQL dostępny jest \hyperref[fig:mysql-test]{\textbf{tutaj}.}
-% \subsection{phpMyAdmin – instalacja i konfiguracja}
-% \subsection{phpMyAdmin – instalacja i konfiguracja}
+
+\newpage
+\subsection{phpMyAdmin – instalacja i konfiguracja}
+Aby zainstalować phpMyAdmin należy użyć komendy:
+\begin{Verbatim}[frame=single,fontsize=\small]
+sudo dnf install phpMyAdmin php-mysqlnd php-mcrypt php-php-gettext -y
+\end{Verbatim}
+\vspace*{-5pt}
+Po instalacji wykonuje kopię oryginalnego pliku konfiguracyjnego. Można to zrobić komendą:
+\begin{Verbatim}[frame=single,fontsize=\footnotesize]
+cp /etc/httpd/conf.d/phpMyAdmin.conf /etc/httpd/conf.d/phpMyAdnin.conf.org
+\end{Verbatim}
+\vspace*{-10pt}
+\fg{contents/configuration/phpMyAdmin/1.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+\vspace*{-10pt}
+% \fg{contents/configuration/phpMyAdmin/2.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
+Konfiguracja pliku /etc/httpd/conf.d/phpMyAdmin.conf. W tym pliku należy zmienić sieci tak aby odzwierciedlały potrzeby firmy.
+\fg{contents/configuration/phpMyAdmin/3.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
+Test działania phpMyAdmin dostępny jest \hyperref[fig:phpMyAdmin-test]{\textbf{tutaj}.}
+% \newpage
+% \fg{contents/configuration/phpMyAdmin/4.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
 % \subsection{UserDir na serwerze HTTP – instalacja i konfiguracja}
 % \subsection{wordpress – instalacja i konfiguracja}
 % \subsection{proxy – instalacja i konfiguracja}
@@ -785,6 +807,14 @@ Jak można zauważyć strona wykorzystującą PHP działa poprawnie, nie wyskocz
 \subsection{MySQL}
 \fgc{contents/configuration/mariadb/5.png}{Test usługi mariadb (MySQL)}{Test usługi mariadb (MySQL)}{mysql-test}
 Jak widać podłączenie zz bazą danych działa. Następnym i ostatnim krokiem jest dodanie usługi MySQL do dozwolonych usług w zaporze ogniowej. 
+
+\newpage
+\subsection{phpMyAdmin}
+\fgc{contents/configuration/phpMyAdmin/5.png}{Test usługi phpMyAdmin – część pierwsza}{Test usługi phpMyAdmin – część pierwsza}{phpMyAdmin-test}
+Pierwszym krokiem w testowaniu phpMyAdmin jest otworzenie strony serwera tej usługi w przeglądarce a następnie zalogowanie się na konto.
+\fg{contents/configuration/phpMyAdmin/6.png}{Test usługi phpMyAdmin – część druga}{Test usługi phpMyAdmin – część druga}
+
+Jak widać po zalaogowaniu mamy dostęp do administrowania bazami danych.
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
