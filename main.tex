@@ -751,7 +751,7 @@ sudo dnf install phpMyAdmin php-mysqlnd php-mcrypt php-php-gettext -y
 \vspace*{-5pt}
 Po instalacji wykonuje kopię oryginalnego pliku konfiguracyjnego. Można to zrobić komendą:
 \begin{Verbatim}[frame=single,fontsize=\footnotesize]
-cp /etc/httpd/conf.d/phpMyAdmin.conf /etc/httpd/conf.d/phpMyAdnin.conf.org
+sudo cp /etc/httpd/conf.d/phpMyAdmin.conf /etc/httpd/conf.d/phpMyAdnin.conf.org
 \end{Verbatim}
 \vspace*{-10pt}
 \fg{contents/configuration/phpMyAdmin/1.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
@@ -765,7 +765,29 @@ Test działania phpMyAdmin dostępny jest \hyperref[fig:phpMyAdmin-test]{\textbf
 % \newpage
 % \fg{contents/configuration/phpMyAdmin/4.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
 
-% \subsection{UserDir na serwerze HTTP – instalacja i konfiguracja}
+\newpage
+\subsection{UserDir na serwerze HTTP – konfiguracja}
+Gdy mamy już zainstalowany serwer http to pierwszym krokiem do skonfigurowania UserDir jest modyfikacja pliku konfiguracyjnego /etc/httpd/conf.d/userdir.conf, ale przed tym dobrze jest zrobić kopię zapasową tego pliku. Można to wykonać następującą komendą:
+\begin{Verbatim}[frame=single]
+sudo cp /etc/httpd/conf.d/userdir.conf
+\end{Verbatim}
+% \fg{contents/configuration/UserDir/1.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
+\vspace*{-10pt}
+Zrzut ekranu mojej konfiguracji pliku /etc/httpd/conf.d/userdir.conf
+\vspace*{-10pt}
+\fg{contents/configuration/UserDir/2.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
+\vspace*{-10pt}
+Teraz dodaję reguły SELinux, tworzę nowego użytownika, oraz nadaję uprawnienia odpowiednim katalogom, następnie tworze stronę użytkownika maciej.
+\vspace*{-5pt}
+\fg{contents/configuration/UserDir/3.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
+\newpage
+Kod html tej strony
+\fg{contents/configuration/UserDir/4.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+
+Test działania dostępny jest \hyperref[fig:UserDir-test]{\textbf{tutaj}.}
 % \subsection{wordpress – instalacja i konfiguracja}
 % \subsection{proxy – instalacja i konfiguracja}
 % \subsection{SMTP – instalacja i konfiguracja}
@@ -815,6 +837,10 @@ Pierwszym krokiem w testowaniu phpMyAdmin jest otworzenie strony serwera tej us�
 \fg{contents/configuration/phpMyAdmin/6.png}{Test usługi phpMyAdmin – część druga}{Test usługi phpMyAdmin – część druga}
 
 Jak widać po zalaogowaniu mamy dostęp do administrowania bazami danych.
+\newpage
+\subsection{UserDir – serwer http}
+\fgc{contents/configuration/UserDir/5.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}{UserDir-test}
+W przeglądarce po wpisaniu adresu strony i ścieżki do profilu użytkownika maciej (tj. ~maciej) widać stronę użytkownika.
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
