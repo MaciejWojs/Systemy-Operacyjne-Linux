@@ -754,12 +754,12 @@ Po instalacji wykonuje kopię oryginalnego pliku konfiguracyjnego. Można to zro
 sudo cp /etc/httpd/conf.d/phpMyAdmin.conf /etc/httpd/conf.d/phpMyAdnin.conf.org
 \end{Verbatim}
 \vspace*{-10pt}
-\fg{contents/configuration/phpMyAdmin/1.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+\fg{contents/configuration/phpMyAdmin/1.png}{phpMyAdmin – instalacja}{phpMyAdmin – instalacja}
 \vspace*{-10pt}
 % \fg{contents/configuration/phpMyAdmin/2.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
 
 Konfiguracja pliku /etc/httpd/conf.d/phpMyAdmin.conf. W tym pliku należy zmienić sieci tak aby odzwierciedlały potrzeby firmy.
-\fg{contents/configuration/phpMyAdmin/3.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+\fg{contents/configuration/phpMyAdmin/3.png}{Konfiguracja pliku /etc/httpd/conf.d/phpMyAdmin.conf}{Konfiguracja pliku /etc/httpd/conf.d/phpMyAdmin.conf}
 
 Test działania phpMyAdmin dostępny jest \hyperref[fig:phpMyAdmin-test]{\textbf{tutaj}.}
 % \newpage
@@ -776,19 +776,53 @@ sudo cp /etc/httpd/conf.d/userdir.conf
 \vspace*{-10pt}
 Zrzut ekranu mojej konfiguracji pliku /etc/httpd/conf.d/userdir.conf
 \vspace*{-10pt}
-\fg{contents/configuration/UserDir/2.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+\fg{contents/configuration/UserDir/2.png}{Konfiguracja pliku /etc/httpd/conf.d/userdir.conf}{Konfiguracja pliku /etc/httpd/conf.d/userdir.conf}
 
 \vspace*{-10pt}
 Teraz dodaję reguły SELinux, tworzę nowego użytownika, oraz nadaję uprawnienia odpowiednim katalogom, następnie tworze stronę użytkownika maciej.
 \vspace*{-5pt}
-\fg{contents/configuration/UserDir/3.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+\fg{contents/configuration/UserDir/3.png}{Dodanie użytkownika maciej}{Dodanie użytkownika maciej}
 
 \newpage
 Kod html tej strony
-\fg{contents/configuration/UserDir/4.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}
+\fg{contents/configuration/UserDir/4.png}{Stworzenie strony użytkownia maciej}{Stworzenie strony użytkownia maciej}
 
 Test działania dostępny jest \hyperref[fig:UserDir-test]{\textbf{tutaj}.}
-% \subsection{wordpress – instalacja i konfiguracja}
+
+\subsection{WordPress – instalacja i konfiguracja}
+Aby zainstalować WordPress'a należy wykonać polecenie:
+\begin{Verbatim}[frame=single]
+sudo dnf install wordpress -y
+\end{Verbatim}
+\fg{contents/configuration/wordpress/1.png}{WordPress – instalacja}{WordPress – instalacja}
+
+\newpage
+Stworzenie bazy danych dla WordPress'a oraz stworzenie użytkownika konta administratora bazy danych o nazwie kontowp.
+\fg{contents/configuration/wordpress/2.png}{Stworzenie bazy danych dla WordPress'a}{Stworzenie bazy danych dla WordPress'a}
+
+Do pliku etc/httpd/conf.d/wordpress.conf należy wprowadzić następującą zawartość
+\VerbatimInput{contents/configuration/wordpress/file_configs/wordpress.conf}
+\newpage
+\fg{contents/configuration/wordpress/3.png}{Edycja pliku /etc/httpd/conf.d/wordpress.conf}{Edycja pliku /etc/httpd/conf.d/wordpress.conf}
+
+W pliku /etc/wordpress/wp-config.php nalży zmienić nazwę bazy danych na taką jak ustalono w kroku 2, tak samo w przypadku użytkownika kontop.
+\fg{contents/configuration/wordpress/4.png}{Edycja pliku /etc/wordpress/wp-config.php}{Edycja pliku /etc/wordpress/wp-config.php}
+
+W następnym kroku należy wykonać następujące polecenia: 
+\begin{Verbatim}[frame=single]
+sudo setsebool -P httpd_can_network_connect_db=1
+sudo setsebool -P httpd_can_sendmail=1
+sudo systemctl restart httpd
+\end{Verbatim}
+% \fg{contents/configuration/wordpress/5.png}{}{}
+\newpage
+W kolejnym kroku należy z poziomu klienta w przeglądarce wejść na stronę www.BinaryBuilders.ns/wordress oraz zainstalować stronę WordPress.
+\fg{contents/configuration/wordpress/6.png}{Instalacja WordPress}{Instalacja WordPress}
+
+Efekt działania powyższego kroku
+\fg{contents/configuration/wordpress/7.png}{Instalacja WordPress – sukces}{Instalacja WordPress – sukces}
+
+Test działa WordPress'a można znajduje się \hyperref[fig:wordpress-test]{\textbf{tutaj}.}
 % \subsection{proxy – instalacja i konfiguracja}
 % \subsection{SMTP – instalacja i konfiguracja}
 % \subsection{POP-IMAP – instalacja i konfiguracja}
@@ -841,6 +875,11 @@ Jak widać po zalaogowaniu mamy dostęp do administrowania bazami danych.
 \subsection{UserDir – serwer http}
 \fgc{contents/configuration/UserDir/5.png}{MySQL – instalacja część druga}{MySQL – instalacja część druga}{UserDir-test}
 W przeglądarce po wpisaniu adresu strony i ścieżki do profilu użytkownika maciej (tj. ~maciej) widać stronę użytkownika.
+\subsection{WordPress}
+\fgc{contents/configuration/wordpress/7.png}{Dashboard WordPress'a}{Dashboard WordPress'a}{wordpress-test}
+
+Jak widać powyżej po zalogowaniu się na konto widać dashboard WordPress'a, skąd można skongigurować stronę internetową. 
+
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
