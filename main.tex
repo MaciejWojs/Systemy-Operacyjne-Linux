@@ -708,6 +708,20 @@ Stworzenie poglądowej strony html w lokalizacji /var/www/html/
 
 Test działania web serwera dostępny jest \hyperref[fig:http-test]{\textbf{tutaj}.}
 
+\newpage
+\subsection{PHP – instalacja i konfiguracja}
+Aby zainstalowac PHP należy wydać polecenie:
+\begin{Verbatim}[frame=single]
+sudo dnf install php php-mbstring php-pear -y
+\end{Verbatim}
+\fg{contents/configuration/PHP/1.png}{PHP – instalacja}{PHP – instalacja}
+
+Po zainstalowaniu wymaganych pakietów tworzę prostą stronę internetową wykorzystującą PHP.
+\fg{contents/configuration/PHP/2.png}{PHP – stworzenie strony internetowej}{PHP – stworzenie strony internetowej}
+Test działania strony dostępny jest \hyperref[fig:php-test]{\textbf{tutaj}.}
+% \newpage
+% \subsection{phpMyAdmin – instalacja i konfiguracja}
+% \subsection{phpMyAdmin – instalacja i konfiguracja}
 % \subsection{phpMyAdmin – instalacja i konfiguracja}
 % \subsection{UserDir na serwerze HTTP – instalacja i konfiguracja}
 % \subsection{wordpress – instalacja i konfiguracja}
@@ -742,6 +756,11 @@ Aby podłączyć się z serwerem Samby należy otworzyć menadżer plików nast�
 \subsection{HTTP}
 \fgc{contents/configuration/HTTP/9.png}{Test działania serwera WWW}{Test działania serwera WWW}{http-test}
 Jak widać na zdjęiu powyżej web serwer działa poprawnie. 
+\newpage
+
+\subsection{PHP}
+\fgc{contents/configuration/PHP/3.png}{Strona html + PHP}{Strona html + PHP}{php-test}
+Jak można zauważyć strona wykorzystującą PHP działa poprawnie, nie wyskoczył żaden błąd dotyczący błednej konfiguracji PHP, czy błędneego użycia go na stronie.
 
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
