@@ -83,7 +83,7 @@
             Imie i nazwisko: &   &  &  & Data oddania: \\
             Maciej Wójs      &   &  &  & \today        \\
             Nr grupy:        &   &  &  & Ocena:        \\
-            L3               &                         \\
+            P3               &                         \\
       \end{tabular}
       % \caption{Sample Table}
       % \label{tab:sample_table}
@@ -256,10 +256,10 @@ Aby maszyna wirtualna miała dostęp do internetu wymagane jest dodanie karty si
 \fg{contents/OS_installation/Fedora40/5.png}{Dodanie pierszej karty sieciowej – NAT}{Dodanie pierszej karty sieciowej}
 \newpage
 Druga karta sieciowa jest dodana w celu połączenia się hosta z maszyną wirtualną poprzez protokół SSH oraz udostępnienia usług takich jak http czy samba. Połączenie poprzez SSH umożliwia łatwiejszą konfigurację maszyny wirtualnej.
-\fg{contents/OS_installation/Fedora40/6.png}{Dodanie pierszej drugiej karty sieciowej – sieć mostkowana (bridged)}{Dodanie drugiej karty sieciowej}
+\fg{contents/OS_installation/Fedora40/6.png}{Dodanie drugiej karty sieciowej – sieć mostkowana (bridged)}{Dodanie drugiej karty sieciowej}
 
 Trzecia karta sieciowa posłuży do stworzenia sieci wewnętrznej dla maszyn wirtualnych w sposób taki aby się one wzajemnie widziały (tzn. były dostępne), a nie były dostępne z poziomu hosta.
-\fg{contents/OS_installation/Fedora40/7.png}{Dodanie pierszej trzeciej karty sieciowej – sieć wewnętrzna}{Dodanie trzeciej karty sieciowej}
+\fg{contents/OS_installation/Fedora40/7.png}{Dodanie trzeciej karty sieciowej – sieć wewnętrzna}{Dodanie trzeciej karty sieciowej}
 \newpage
 Po dodaniu kart sieciowych można uruchomić maszynę wirtualną. Po chwili ukazuje się menu grub z opcją instalacji Fedory 40. Tą opcję należy wybrać w celu dalszej instalacji.
 \fg{contents/OS_installation/Fedora40/8.png}{Uruchomienie instalatora Fedory.}{Uruchomienie instalatora Fedory.}
@@ -832,12 +832,13 @@ sudo dnf install squid -y
 \end{Verbatim}
 \fg{contents/configuration/Proxy/1.png}{Proxy – instalacja}{Proxy – instalacja}
 
-W następnym kroku trzeba dodać do pliku /etc/squid/squid.conf jak w dwóch następnych zdjęciach.
+W następnym kroku trzeba dodać do pliku /etc/squid/squid.conf zawartość jak w dwóch następnych zdjęciach.
 % \fg{contents/configuration/Proxy/2.png}{Proxy – instalacja}{Proxy – instalacja}
-\fg{contents/configuration/Proxy/3.png}{Proxy – instalacja}{Proxy – instalacja}
-\fg{contents/configuration/Proxy/4.png}{Proxy – instalacja}{Proxy – instalacja}
-
+\fg{contents/configuration/Proxy/3.png}{Proxy – konfiguracja część pierwsza}{Proxy – konfiguracja część pierwsza}
 \newpage
+\fg{contents/configuration/Proxy/4.png}{Proxy – konfiguracja część druga}{Proxy – konfiguracja część druga}
+
+\vspace*{-10pt}
 Po skonfigurowaniu tego pliku należy wydać następujące komendy:
 \begin{Verbatim}[frame=single]
 systemctl start squid
@@ -846,15 +847,105 @@ firewall-cmd --add-service=squid --permanent
 firewall-cmd --reload
 \end{Verbatim}
 
+\vspace*{-5pt}
 Test proxy jest dostępny \hyperref[fig:proxy-test]{\textbf{tutaj}.}
 % \fg{contents/configuration/Proxy/5.png}{Proxy – instalacja}{Proxy – instalacja}
 
-
-
-% \subsection{SMTP – instalacja i konfiguracja}
-% \subsection{POP-IMAP – instalacja i konfiguracja}
-% \subsection{Skrypt i crontab – konfiguracja}
+\vspace*{-10pt}
+\subsection{SMTP – instalacja i konfiguracja}
+\vspace*{-5pt}
+Komenda do instalacji SMTP:
+% \vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+      sudo dnf install postfix -y
+\end{Verbatim}
+\vspace*{-10pt}
+\fg{contents/configuration/SMTP/1.png}{Proxy – konfiguracja część druga}{Proxy – konfiguracja część druga}
 \newpage
+
+W następnym kroku trzeba dodać do pliku /etc/postfix/main.cf zawartość tak jak na dwóch następnych zdjęciach.
+\fg{contents/configuration/SMTP/3.png}{Konfiguracja /etc/postfix/main.cf – część pierwsza}{Konfiguracja /etc/postfix/main.cf – część pierwsza}
+\fg{contents/configuration/SMTP/4.png}{Konfiguracja /etc/postfix/main.cf – część druga}{Konfiguracja /etc/postfix/main.cf – część druga}
+
+Po konfiguracji trzeba wykonać następujące komendy:
+\begin{Verbatim}[frame=single]
+systemctl enable --now postfix
+firewall-cmd --add-service=smtp --permanent
+firewall-cmd --reload
+\end{Verbatim}
+Test poczty jest dostępny \hyperref[fig:poczta-test]{\textbf{tutaj}.}
+
+\newpage
+\subsection{POP-IMAP – instalacja i konfiguracja}
+Aby wdrożyć POP/IMAP należy użyć polecenia:
+\begin{Verbatim}[frame=single]
+sudo dnf install dovecot -y
+\end{Verbatim}
+
+\vspace*{-10pt}
+Po zainstalowaniu wymaganych pakietów wykonuje kopie tego pliku /etc/dovecot/dovecot.conf. Następnie modyfikuje ten plik w następujący sposób: 
+\fg{contents/configuration/POP-IMAP/3.png}{Konfiguracja /etc/dovecot/dovecot.conf}{Konfiguracja /etc/dovecot/dovecot.conf}
+
+\vspace*{-10pt}
+W następnym kroku wykonuję kopię pliku /etc/dovecot/\\conf.d/10-auth.conf. Na dwóch następnych zdjęciach jest pokazane jak zmodyfikować ten plik.
+\fg{contents/configuration/POP-IMAP/5.png}{Konfiguracja /etc/dovecot/conf.d/10-auth.conf – część pierwsza}{Konfiguracja /etc/dovecot/conf.d/10-auth.conf – część pierwsza}
+
+\newpage
+\fg{contents/configuration/POP-IMAP/6.png}{Konfiguracja /etc/dovecot/conf.d/10-auth.conf – część druga}{Konfiguracja /etc/dovecot/conf.d/10-auth.conf – część druga}
+
+W daleszej części konfiguruję plik /etc/dovecot/conf.d/10-mail.conf. W odpowiednim miejscu dopisuję linię:
+\begin{Verbatim}[frame=single]
+      mail_location = maildir:~/Maildir
+\end{Verbatim} 
+\fg{contents/configuration/POP-IMAP/8.png}{Konfiguracja /etc/dovecot/conf.d/10-mail.conf}{Konfiguracja /etc/dovecot/conf.d/10-mail.conf}
+
+\newpage
+W następnym kroku edytuję plik  /etc/dovecot/conf.d/10-master.conf jak poniżej: 
+\fg{contents/configuration/POP-IMAP/10.png}{Konfiguracja /etc/dovecot/conf.d/10-master.conf}{Konfiguracja /etc/dovecot/conf.d/10-master.conf}
+
+W kolejnym kroku edytuję plik /etc/dovecot/conf.d/10-ssl.conf. Dodaję linię:
+\begin{Verbatim}[frame=single]
+ssl = yes
+\end{Verbatim} 
+\fg{contents/configuration/POP-IMAP/11.png}{Konfiguracja /etc/dovecot/conf.d/10-ssl.conf}{Konfiguracja /etc/dovecot/conf.d/10-ssl.conf}
+
+
+\newpage
+Po konfiguracji wykonuję następujące komendy: 
+\vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+systemctl enable --now dovecot 
+firewall-cmd --add-service={pop3,imap} --permanent 
+firewall-cmd --reload 
+\end{Verbatim}
+\vspace*{-14pt}
+\fg{contents/configuration/POP-IMAP/12.png}{Restart usługi Dovecot i dodanie do zapory sieciowej}{Restart usługi Dovecot i dodaSnie do zapory sieciowej}
+
+\vspace*{-14pt}
+Aby zainstalować klienta poczty na serwerze należy użyć komendy:
+\vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+sudo dnf install mailx -y
+\end{Verbatim}
+
+\vspace*{-10pt}
+Następnie tworzę plik /etc/profile.d/mail.sh i dodaję do niego następującą zawartość:
+\vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+export MAIL=$HOME/Maildir 
+\end{Verbatim}
+
+\vspace*{-10pt}
+Następnie weryfikuje działanie powyższego skryptu:
+\fg{contents/configuration/POP-IMAP/15.png}{Test zmiennej środowiskowej MAIL}{Test zmiennej środowiskowej MAIL}
+
+\newpage
+Przykład użycia tekstowego klienta poczty na serwerze:
+\fg{contents/configuration/POP-IMAP/16.png}{mailx – przykład użycia}{mailx – przykład użycia}
+
+Test działania poczty dostępny jest \hyperref[fig:poczta-test]{\textbf{tutaj}.}
+
+% \subsection{Dodatkowa usługa git – instalacja i konfiguracja}
 
 
 \section{Testy działania wdrożonych usług}
@@ -866,7 +957,7 @@ Jak widać na powyższym zdjęciu system w sieci wewnętrznej dostaje odpowiedzi
 \subsection{DHCP}
 \vspace*{-10pt}
 \fgc{contents/configuration/DHCP/4.png}{Instalacja DHCP}{Instalacja DHCP}{dhcp-test}
-\vspace*{-5pt}
+% \vspace*{-5pt}
 Jak widać na powyższym zdjęciu karta w systemie klienta ustawiona na sieć wewnętrzną dostała poprawny adres IP, adres bramy domyślnej i DNS. Na zdjęciu również widać że pula DHCP działa poprawnie. 
 \newpage
 \subsection{Raid 5}
@@ -875,6 +966,7 @@ Jak widać na powyższym zrzucie ekranu po restarcie serwera partycje są montow
 
 \subsection{Samba}
 \fgc{contents/configuration/Samba/7.png}{Samba – próba podłączenia się do udziału na serwerze}{Samba – próba podłączenia się do udziału na serwerze}{samba-try-connection}
+\vspace*{-10pt}
 Aby podłączyć się z serwerem Samby należy otworzyć menadżer plików następnie otworzyć zakładkę Plik w lewym górnym rogu, następnie połącz z serwerem, kolejno w typie należy wybrać Udział Windows, ostatecznie należy wypełnić wymagane dane. Przykładowa próba podłączenia powyżej, a efekt tego działania poniżej.
 \fgc{contents/configuration/Samba/8.png}{Samba – wynik poprzedniego kroku}{Samba – wynik poprzedniego kroku}{samba-connected}
 
@@ -921,13 +1013,18 @@ Widok strony po zignorowaniu ostrzerzenia.
 \fg{contents/configuration/Proxy/9.png}{Proxy – monitoring ruchu sieciowego z serwera}{Proxy – monitoring ruchu sieciowego z serwera}
 
 Jak widać na powyższym zrzucie ekranu proxy działa poprawnie. Na serwerze wyświetlane są strony z jakimi próbuje się połączyć klient. Przy obecnym ustawieniu proxy nie możliwa jest aktualizacja systemu. rozwiązaniem tego problemu jest dodanie kilku linijek do /etc/environment. Linijki które trzeba dodać:
-\begin{Verbatim}[frame=single]
-http_proxy="http://192.168.230.1:3128/" %chktex 18
-https_proxy="http://192.168.230.1:3128/" %chktex 18
-ftp_proxy="http://192.168.230.1:3128/" %chktex 18
-no_proxy="localhost,127.0.0.1,::1" %chktex 18
+\begin{Verbatim}[frame=single, commandchars=\\\{\}]
+http_proxy="http://192.168.230.1:3128/"
+https_proxy="http://192.168.230.1:3128/"
+ftp_proxy="http://192.168.230.1:3128/"
+no_proxy="localhost,127.0.0.1,::1"
 \end{Verbatim}
 \newpage
+
+\subsection{Poczta}
+\fgc{contents/configuration/POP-IMAP/16.png}{Wysłanie maila na serwerze}{Wysłanie maila na serwerze}{poczta-test}
+
+
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
 \section{Wnioski}
