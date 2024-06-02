@@ -17,6 +17,7 @@
 \usepackage{framed}
 \usepackage{xcolor}
 \usepackage{microtype}
+\usepackage{subcaption}
 %BinaryBuilders 
 
 \DefineVerbatimEnvironment{VerbatimBorder}{Verbatim}
@@ -593,7 +594,7 @@ Test po ponownym uruchominiu jest dostępny \hyperref[fig:raid5-auto-mount-test]
 \vspace*{-5pt}
 \subsection{Samba – instalacja i konfiguracja}
 \vspace*{-5pt}
-Aby zainstalować oprogramowanie do stworzenia serwera DHCP należy wydać polecenie:
+Aby zainstalować oprogramowanie do stworzenia serwera samba należy wydać polecenie:
 \vspace*{-5pt}
 \begin{Verbatim}[frame=single]
       sudo apt install samba-client samba -y
@@ -669,7 +670,44 @@ Po restarcie usługi named nie pozostaje nic innego jak sprawdzenie czy podłąc
 % \fg{contents/configuration/Samba/6.png}{}{}
 
 
-% \subsection{HTTP – instalacja i konfiguracja}
+\subsection{HTTP – instalacja i konfiguracja}
+Aby zainstalować oprogramowanie do stworzenia serwera HTTP należy wydać
+polecenie: 
+
+\vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+sudo dnf install httpd -y
+\end{Verbatim}
+\vspace*{-20pt}
+\fg{contents/configuration/HTTP/1.png}{Instalacja serwera HTTP}{Instalacja serwera HTTP}
+\vspace*{-10pt}
+W kolejym kroku wykonuje kopie oryginalnego pliku kongiguracyjengo serwra http. Robię to następującą komendą: 
+\vspace*{-5pt}
+\begin{Verbatim}[frame=single]
+cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf.org 
+\end{Verbatim}
+% \fg{contents/configuration/HTTP/3.png}{2}{2}
+\vspace*{-5pt}
+w daleszej kolejności zabieram się za edycję wcześniej wspomnianego pliku. Edycja tego piliku obejmuje aż cztery zdjęcia
+\fg{contents/configuration/HTTP/3.png}{Edycja /etc/httpd/conf/httpd.conf – część pierwsza}{Edycja /etc/httpd/conf/httpd.conf – 1}
+\newpage
+\fg{contents/configuration/HTTP/4.png}{Edycja /etc/httpd/conf/httpd.conf – część druga}{Edycja /etc/httpd/conf/httpd.conf – 2}
+% \newpage
+\fg{contents/configuration/HTTP/5.png}{Edycja /etc/httpd/conf/httpd.conf – część trzecia}{Edycja /etc/httpd/conf/httpd.conf – 3}
+\newpage
+\fg{contents/configuration/HTTP/6.png}{Edycja /etc/httpd/conf/httpd.conf – część czwarta}{Edycja /etc/httpd/conf/httpd.conf – 4}
+W następnym kroku wykonuje następujące polecnia: 
+\begin{Verbatim}[frame=single]
+firewall-cmd --add-server=http --permanent
+firewall-cmd --reload
+\end{Verbatim}
+% \fg{contents/configuration/HTTP/7.png}{7}{7}
+% \newpage
+Stworzenie poglądowej strony html w lokalizacji /var/www/html/
+\fg{contents/configuration/HTTP/8.png}{Strona html – domyślna strona serwera}{Strona html – domyślna strona serwera}
+
+Test działania web serwera dostępny jest \hyperref[fig:http-test]{\textbf{tutaj}.}
+
 % \subsection{phpMyAdmin – instalacja i konfiguracja}
 % \subsection{UserDir na serwerze HTTP – instalacja i konfiguracja}
 % \subsection{wordpress – instalacja i konfiguracja}
@@ -701,6 +739,9 @@ Jak widać na powyższym zrzucie ekranu po restarcie serwera partycje są montow
 Aby podłączyć się z serwerem Samby należy otworzyć menadżer plików następnie otworzyć zakładkę Plik w lewym górnym rogu, następnie połącz z serwerem, kolejno w typie należy wybrać Udział Windows, ostatecznie należy wypełnić wymagane dane. Przykładowa próba podłączenia powyżej, a efekt tego działania poniżej.
 \fgc{contents/configuration/Samba/8.png}{Samba – wynik poprzedniego kroku}{Samba – wynik poprzedniego kroku}{samba-connected}
 
+\subsection{HTTP}
+\fgc{contents/configuration/HTTP/9.png}{Test działania serwera WWW}{Test działania serwera WWW}{http-test}
+Jak widać na zdjęiu powyżej web serwer działa poprawnie. 
 
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
