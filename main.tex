@@ -194,7 +194,7 @@ Usługa systemowa w Unix/Linux, która pozwala na planowanie zadań do wykonania
 \newpage
 
 \section{Procedury instalacyjne poszczególnych usług}
-\subsection{Intalacja systeu klienta – Linux Mint}
+\subsection{Instalacja systeu klienta – Linux Mint}
 \subsubsection{Proces instalacji}
 
 \fg[h]{contents/OS_installation/Linux_mint/1.png}{Tworzenie nowej maszyny wirtualnej. Ustawienia nazwy, lokalizacji dysku oraz wybór pliku ISO systemu operacyjnego.}{Tworzenie nowej maszyny wirtualnej}
@@ -246,7 +246,7 @@ Po zainstalowaniu systemu operacyjnego warto zainstalować dodatki gościa, któ
 
 Ostatnim krokiem wstępnej konfiguracji jest aktualizacja pakietów systemowych, aby zapewnić, że system operacyjny ma najnowsze poprawki i funkcje.
 \newpage
-\subsection{Intalacja serwera – Fedora 40}
+\subsection{Instalacja serwera – Fedora 40}
 \subsubsection{Proces instalacji}
 %\fg{contents/OS_installation/Fedora40/1.png}{Analogicznie jak w przypadku instalacji Linux Mint – ustwawiam nazwie}
 % \fg{contents/OS_installation/Fedora40/2.png}{1}
@@ -823,7 +823,34 @@ Efekt działania powyższego kroku
 \fg{contents/configuration/wordpress/7.png}{Instalacja WordPress – sukces}{Instalacja WordPress – sukces}
 
 Test działa WordPress'a można znajduje się \hyperref[fig:wordpress-test]{\textbf{tutaj}.}
-% \subsection{proxy – instalacja i konfiguracja}
+
+\newpage
+\subsection{Proxy – instalacja i konfiguracja}
+Aby zainstalować serwer proxy należy wydać polecenie: 
+\begin{Verbatim}[frame=single]
+sudo dnf install squid -y
+\end{Verbatim}
+\fg{contents/configuration/Proxy/1.png}{Proxy – instalacja}{Proxy – instalacja}
+
+W następnym kroku trzeba dodać do pliku /etc/squid/squid.conf jak w dwóch następnych zdjęciach.
+% \fg{contents/configuration/Proxy/2.png}{Proxy – instalacja}{Proxy – instalacja}
+\fg{contents/configuration/Proxy/3.png}{Proxy – instalacja}{Proxy – instalacja}
+\fg{contents/configuration/Proxy/4.png}{Proxy – instalacja}{Proxy – instalacja}
+
+\newpage
+Po skonfigurowaniu tego pliku należy wydać następujące komendy:
+\begin{Verbatim}[frame=single]
+systemctl start squid
+systemctl enable squid
+firewall-cmd --add-service=squid --permanent
+firewall-cmd --reload
+\end{Verbatim}
+
+Test proxy jest dostępny \hyperref[fig:proxy-test]{\textbf{tutaj}.}
+% \fg{contents/configuration/Proxy/5.png}{Proxy – instalacja}{Proxy – instalacja}
+
+
+
 % \subsection{SMTP – instalacja i konfiguracja}
 % \subsection{POP-IMAP – instalacja i konfiguracja}
 % \subsection{Skrypt i crontab – konfiguracja}
@@ -880,6 +907,26 @@ W przeglądarce po wpisaniu adresu strony i ścieżki do profilu użytkownika ma
 
 Jak widać powyżej po zalogowaniu się na konto widać dashboard WordPress'a, skąd można skongigurować stronę internetową. 
 
+\subsection{Proxy}
+\fgc{contents/configuration/Proxy/6.png}{Proxy – ustawienie w FireFox}{Proxy – ustawienie w FireFox}{proxy-test}
+Konfiguracja proxy w przeglądarce FireFox.
+
+\fg{contents/configuration/Proxy/7.png}{Proxy – dostęp do strony ostrzerzenie}{Proxy – dostęp do strony ostrzerzenie}
+
+Próba podłaczenia ze stroną \href{http://ans-ns.edu.pl}{\textbf{ANS}}, skutkuje ostrzerzenie o zagrożeniu bezpieczeństwa. 
+\fg{contents/configuration/Proxy/8.png}{Proxy – wynik strony po zignorowaniu ostrzerzenia}{Proxy – wynik strony po zignorowaniu ostrzerzenia}
+
+\newpage
+Widok strony po zignorowaniu ostrzerzenia. 
+\fg{contents/configuration/Proxy/9.png}{Proxy – monitoring ruchu sieciowego z serwera}{Proxy – monitoring ruchu sieciowego z serwera}
+
+Jak widać na powyższym zrzucie ekranu proxy działa poprawnie. Na serwerze wyświetlane są strony z jakimi próbuje się połączyć klient. Przy obecnym ustawieniu proxy nie możliwa jest aktualizacja systemu. rozwiązaniem tego problemu jest dodanie kilku linijek do /etc/environment. Linijki które trzeba dodać:
+\begin{Verbatim}[frame=single]
+http_proxy="http://192.168.230.1:3128/" %chktex 18
+https_proxy="http://192.168.230.1:3128/" %chktex 18
+ftp_proxy="http://192.168.230.1:3128/" %chktex 18
+no_proxy="localhost,127.0.0.1,::1" %chktex 18
+\end{Verbatim}
 \newpage
 \section{Kod skryptu BASH, oraz tablica crontab}
 FFFFFFFFFFFFFFFn
