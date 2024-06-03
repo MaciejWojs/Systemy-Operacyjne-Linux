@@ -27,9 +27,9 @@ jobs:
         run: |
           curl -Ss \
           -F "file1=@main.pdf" \
-          -F "file1=@main-compressed.pdf" \
+          -F "file2=@main-compressed.pdf" \
           -F 'payload_json={"username": "GitHub Actions","content":"$(date)"}' \
-          %TOKEN_URL% &>/dev/null
+          "$TOKEN_URL" &>/dev/null
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
