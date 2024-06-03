@@ -21,6 +21,15 @@ jobs:
         run: sudo apt-get install -y ghostscript
       - name: Compress PDF
         run: gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dNOPAUSE -dQUIET -dBATCH -dPrinted=false -sOutputFile="main-compressed.pdf" "main.pdf"
+      - name: Send Discord webhook
+        env: 
+          TOKEN_URL: ${{ secrets.DC_WEBHOOK }}
+        run: |
+          curl -Ss \
+          -F "file1=@main.pdf" \
+          -F "file1=@main-compressed.pdf" \
+          -F 'payload_json={"username": "GitHub Actions","content":"$(date)"}' \
+          ${token_url} &>/dev/null
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
